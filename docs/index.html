@@ -104,11 +104,11 @@ body {
 .ad {
   font-family: var(--font-type);
   font-size: clamp(1.15rem, 3vw, 1.6rem);
-  line-height: 2.9;
+  line-height: 1.7;
   margin: 0;
-  padding-top: 0.4em;
 }
-.ad .line { display: block; margin-bottom: 0.5em; }
+.ad .line { display: block; margin-bottom: 0.9em; }
+.ad .line:has(.edit:not(.add)) { padding-top: 1.15em; }
 .ad .line:last-child { margin-bottom: 0; }
 /* One edit: the struck original on the line, the new words written above it */
 .edit { position: relative; display: inline-block; text-align: center; line-height: 1.5; }
@@ -173,7 +173,7 @@ body {
   padding: 1.4rem 1.2rem 1.3rem;
   transform: rotate(3deg);
   position: absolute;
-  top: 7rem;
+  top: 12.5rem;
   right: -10rem;
   margin: 0;
   width: 15rem;
@@ -361,7 +361,7 @@ footer {
       <p class="sig">K</p>
     </aside>
       <p class="ad">
-        <span class="line">We're looking for a <del style="--d:0.6s">fearless, aggressive rockstar</del> product builder</span>
+        <span class="line">We're looking for a <del style="--d:0.6s">fearless rockstar</del> product builder</span>
         <span class="line">to <span class="edit" data-new="help small shops grow"><del style="--d:1.5s">dominate the market</del><ins style="--d:2.1s">help small shops grow</ins></span>.</span>
         <span class="line">You're <span class="edit" data-new="someone who cares"><del style="--d:3.2s">a competitive self-starter</del><ins style="--d:3.9s">someone who cares</ins></span>.</span>
         <span class="line"><span class="edit" data-new="£65,000 to £80,000"><del style="--d:5s">Competitive salary</del><ins style="--d:5.6s">£65,000 to £80,000</ins></span>.</span>
