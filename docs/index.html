@@ -58,7 +58,7 @@ body {
 .wrap {
   max-width: 68rem;
   margin: 0 auto;
-  padding-block: clamp(2rem, 6vw, 4.5rem) 4rem;
+  padding-block: calc(var(--u) * 2.5) 4rem;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid;
@@ -196,9 +196,29 @@ body {
   column-gap: calc(var(--u) * 3);
   row-gap: calc(var(--u) * 2);
 }
-.label {
-  grid-column: 1 / -1;
+.site-head {
   display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--u) calc(var(--u) * 3);
+  flex-wrap: wrap;
+  padding-bottom: calc(var(--u) * 1.5);
+  border-bottom: 1px solid var(--rule, rgba(127,127,127,0.25));
+  margin-bottom: calc(var(--u) * -2);
+}
+.repo-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.repo-link span { color: var(--muted); font-weight: 400; margin-left: 0.25em; }
+.repo-link:hover, .repo-link:focus-visible { color: var(--link); }
+.repo-link:hover span { color: inherit; }
+.label {
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--u);
   align-items: baseline;
   font-size: 0.875rem;
@@ -317,6 +337,8 @@ footer {
   .lede, .support, .support:first-of-type { grid-column: 1 / -1; }
 }
 
+@media (max-width: 520px) { .site-head .label span:last-child { display: none; } }
+
 /* Animation: the final, marked-up state is the default. Script adds .play to run the edits from the clean draft. */
 @keyframes strike { from { background-size: 0% 100%; color: var(--ink); } 60% { color: var(--ink); } to { background-size: 100% 100%; color: #6a7178; } }
 @keyframes write { from { clip-path: inset(-1em 100% -1em -1em); } to { clip-path: inset(-1em -1em -1em -1em); } }
@@ -351,6 +373,10 @@ footer {
 <body>
 
 <main class="wrap">
+  <header class="site-head">
+    <div class="label"><h1>inclusive-job-ads</h1><span>Claude skill</span><span>MIT licence</span></div>
+    <a class="repo-link" href="https://github.com/kevindavies/inclusive-job-ads">GitHub<span aria-hidden="true">&#8599;</span></a>
+  </header>
   <section class="proof-row" aria-label="A job spec, kindly edited">
     <article class="paper">
       <div class="slug" aria-hidden="true"><span>Job spec, draft 2</span><span>Edits in blue</span></div>
@@ -375,7 +401,6 @@ footer {
   </section>
 
   <section class="intro">
-    <div class="label"><h1>inclusive-job-ads</h1><span>Claude skill</span><span>MIT licence</span></div>
     <p class="lede">A Claude skill that writes job ads, and reviews them the way a <em>kind colleague</em> would.</p>
     <p class="support">An ad rarely says “you can’t do this”. Too often it says “you won’t fit in”. The skill finds those lines, and the ones that tell people they’d belong, then suggests specific fixes.</p>
     <p class="support">Every check is grounded in published research, and says how strong that research is. It’s built to support inclusive hiring practices like those used in B Lab’s standards for B Corps. It’s free and open source.</p>
