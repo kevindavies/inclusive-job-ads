@@ -70,7 +70,8 @@ For every hit, decide: **trait** (describes the person or the culture: "a
 competitive self-starter") or **not a trait** (a fixed term, a team name, a
 heading: "customer support", "lead generation", "responsibilities",
 "Trustpilot", "analytics"). Agree or disagree with the script's tags. Your
-result is the "after my read" count. Group what you discounted by reason
+result is the "after my read" count. It covers list words only; trait words
+you find by reading ("rockstar", "hunter") go in the findings, not the count. Group what you discounted by reason
 rather than listing every word.
 
 ### 3. Read for signals
@@ -108,7 +109,7 @@ hard", "rockstar", "ninja". These aren't on the word lists; read for them.
 **Anything else** the ad does that might tell someone they wouldn't fit
 ("hunter", "smash targets", a portfolio for a non-design job). If
 `references/evidence.md` doesn't cover it, label it untested and say it's
-your view.
+your view. Use "guidance" only where evidence.md does.
 
 **What draws people in.** Name every line that tells a reader they'd fit:
 specific flexibility shown in use, a pay range, an adjustments offer, plain
@@ -145,7 +146,7 @@ One kind sentence on the overall impression.
 What's working
 - ... (if little is, say so briefly and name what's clear; don't pad)
 
-Three things worth changing
+Up to three things worth changing (fewer if fewer matter)
 1. [The change] Why: ... Evidence: field / legal / contested / lab / guidance / untested (more than one if it bundles checks)
 2. ...
 3. ...
@@ -167,8 +168,8 @@ Could someone who'd read it differently from you take a look?
 Tools catch words. People catch what the words imply.
 ```
 
-Keep it in proportion: a short ad gets a short review, roughly no longer
-than the ad. If the location matters to a legal point and the ad doesn't
+Keep it in proportion. For a short ad, give each section a line or two and
+merge "Who might stop reading" into the changes. If the location matters to a legal point and the ad doesn't
 say, write "if this job is in the UK, ..." rather than assuming.
 
 ## Other uses
@@ -183,7 +184,8 @@ say, write "if this job is in the UK, ..." rather than assuming.
   ```
 
   If they're different roles, say so and compare only what they share:
-  boilerplate, benefits, tone, pay and flexibility.
+  boilerplate, benefits, tone, pay and flexibility. Keep any injection note
+  and the "Before it goes out" closer.
 - **Review a template.** Large employers reuse templates and boilerplate
   ("About us", benefits, equal opportunities text). Reviewing those fixes
   every ad built on them, so say which findings come from the template.
