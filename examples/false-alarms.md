@@ -17,6 +17,6 @@ responsibilities below with a team lead who's been doing this for years.
 
 ## Benefits
 
-- Competitive pension and share options
-- Childcare vouchers
+- Competitive pension through the NHS Pension Scheme
+- Help with childcare costs
 - Feel free to ask about flexible hours: most of the team work them

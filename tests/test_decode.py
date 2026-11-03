@@ -44,7 +44,7 @@ class FixedTerms(unittest.TestCase):
         hits = r["agentic_hits"] + r["communal_hits"]
         self.assertEqual(len(hits), 2)
         self.assertTrue(all("check" in h for h in hits))
-        self.assertEqual(r["after_likely_fixed_terms"]["lean"], "no trait words found")
+        self.assertEqual(r["script_adjusted"]["lean"], "no trait words found")
 
     def test_trait_use_is_kept(self):
         r = decode.analyse("You are competitive and supportive.")
@@ -56,6 +56,15 @@ class FixedTerms(unittest.TestCase):
         kept = [h["line"] for h in r["agentic_hits"] if "check" not in h]
         self.assertEqual(tagged, [1])
         self.assertEqual(kept, [2])
+
+
+class Nouns(unittest.TestCase):
+    def test_noun_uses_are_tagged(self):
+        r = decode.analyse("We help independent cafés. Salary: competitive. Business decisions.")
+        self.assertTrue(all("check" in h for h in r["agentic_hits"]))
+
+    def test_summary_runs(self):
+        self.assertIn("Script-adjusted", decode.summary(decode.analyse("A driven leader. £30k-£35k")))
 
 
 class Pay(unittest.TestCase):

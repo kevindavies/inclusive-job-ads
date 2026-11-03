@@ -15,8 +15,8 @@ Some hits are usually fixed terms rather than trait words ("competitive
 salary", "customer support", "lead generation"). They are tagged "check", never
 dropped, so a reader can see them and disagree.
 
-Usage: decode.py FILE   (or pipe text on stdin)
-Prints JSON. Standard library only.
+Usage: decode.py [--summary] FILE   (or pipe text on stdin)
+Prints JSON, or a short text summary with --summary. Standard library only.
 
 Word lists: Copyright (c) 2016 lovedaybrooke, MIT licence. See NOTICE.
 """
@@ -75,7 +75,10 @@ LIKELY_FIXED = [
     r"share options?", r"share scheme", r"market share",
     r"child ?care", r"tender(?:ing)? (?:process|bid)\w*", r"\btendering\b",
     r"feel free", r"decision[- ]?making", r"\bcommitted to\b",
-    r"individual contributor",
+    r"individual contributor", r"\bindividuals\b", r"\bdecisions\b",
+    r"\bobjectives\b", r"understanding of",
+    r"independent (?:caf\w*|shops?|retailers?|businesses|schools?|stores?|restaurants?|living|review\w*)",
+    r"(?:salary|pay|package)\W+competitive", r"competitive\W+(?:depending|doe)\w*",
 ]
 FIXED_RE = re.compile("|".join(LIKELY_FIXED), re.IGNORECASE)
 
@@ -212,24 +215,51 @@ def analyse(text):
         return round(100 * len(k) / n_words, 1) if n_words else 0.0
 
     return {
+        "covers": "Agentic and communal word lists, and pay figures, only. "
+                  "Age, disability, gendered terms, culture and caring need reading.",
         "word_count": n_words,
-        "raw": {
-            "lean": lean(len(c), len(a)),
-            "communal": len(c),
-            "agentic": len(a),
-            "gender_decoder_label": decoder_label(len(c), len(a)),
-        },
-        "after_likely_fixed_terms": {
+        "script_adjusted": {
             "lean": lean(len(c_kept), len(a_kept)),
             "communal": len(c_kept),
             "agentic": len(a_kept),
             "communal_per_100_words": per100(c_kept),
             "agentic_per_100_words": per100(a_kept),
         },
+        "raw": {
+            "lean": lean(len(c), len(a)),
+            "communal": len(c),
+            "agentic": len(a),
+            "gender_decoder_label": decoder_label(len(c), len(a)),
+        },
         "communal_hits": c,
         "agentic_hits": a,
         "pay": pay(lines),
     }
+
+
+def summary(r):
+    """Short text version for long ads."""
+    def group(hs):
+        counts = {}
+        for h in hs:
+            counts[h["word"]] = counts.get(h["word"], 0) + 1
+        return ", ".join(f"{w} x{n}" if n > 1 else w for w, n in counts.items()) or "none"
+
+    out = [r["covers"], ""]
+    sa, raw = r["script_adjusted"], r["raw"]
+    out.append(f"Script-adjusted: {sa['communal']} communal, {sa['agentic']} agentic ({sa['lean']}).")
+    out.append(f"Raw: {raw['communal']} communal, {raw['agentic']} agentic "
+               f"(Gender Decoder label: {raw['gender_decoder_label']}).")
+    for side in ("agentic", "communal"):
+        hs = r[f"{side}_hits"]
+        out.append(f"{side.capitalize()} kept: {group([h for h in hs if 'check' not in h])}")
+        out.append(f"{side.capitalize()} tagged as likely fixed terms: {group([h for h in hs if 'check' in h])}")
+    p = r["pay"]
+    figs = ", ".join(p["salary_figures"]) or "none"
+    out.append(f"Pay: salary figures {figs}"
+               + ("; MORE THAN ONE FIGURE" if p["more_than_one_salary_figure"] else "")
+               + ("; says negotiable" if p["says_negotiable"] else "; doesn't say if negotiable"))
+    return "\n".join(out)
 
 
 def read_input(argv):
@@ -241,7 +271,12 @@ def read_input(argv):
 
 
 def main():
-    print(json.dumps(analyse(read_input(sys.argv)), indent=2, ensure_ascii=False))
+    args = [a for a in sys.argv if a != "--summary"]
+    result = analyse(read_input(args))
+    if "--summary" in sys.argv:
+        print(summary(result))
+    else:
+        print(json.dumps(result, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":
