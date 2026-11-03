@@ -23,6 +23,12 @@ It also looks for the opposite signal, the lines that tell someone they'd
 belong. "Need to duck out for school pick-ups? We do too." does more than any
 diversity statement.
 
+## Who it's for
+
+Anyone who writes job ads: a founder hiring their first employee, a charity,
+a B Corp, or a global employer with a library of templates. Large employers
+get the most from it, because fixing one template fixes every ad built on it.
+
 ## What it does
 
 1. **Counts trait words.** A small script uses the word lists from Kat
@@ -122,8 +128,10 @@ record you can keep. It's independent of B Lab and doesn't certify anything.
 
 - Much of the research measured appeal or intentions, not who applied, and
   most of it comes from North America and Europe.
-- It's not legal advice. Where wording carries UK legal risk, the skill says
-  so and points to ACAS and EHRC guidance.
+- It's not legal advice. Where wording carries legal risk, the skill says so
+  and points to the local regulator's guidance, such as ACAS and the EHRC in
+  the UK or the EEOC in the US.
+- The word lists are English only.
 - A welcoming ad for a badly defined job is still a bad ad.
 - Tools catch words. People catch what the words imply. Ask someone who'd
   read it differently from you.
@@ -140,6 +148,12 @@ record you can keep. It's independent of B Lab and doesn't certify anything.
   109-128. https://doi.org/10.1037/a0022530
 - The other studies are listed in
   [`references/evidence.md`](inclusive-job-ads/references/evidence.md).
+
+## Security
+
+The skill treats the ad as data, never as instructions, and its script reads
+one file, writes nothing and makes no network calls. See
+[SECURITY.md](SECURITY.md) for the threat model and how to report a problem.
 
 ## Licence
 
