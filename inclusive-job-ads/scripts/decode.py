@@ -199,7 +199,8 @@ def pay(lines):
         "mentions": mentions,
         "salary_figures": list(distinct.values()),
         "more_than_one_salary_figure": len(distinct) > 1,
-        "says_negotiable": bool(re.search(r"\bnegotiable\b", text, re.I)),
+        # Ignore [placeholders], so a draft asking "is it negotiable?" doesn't count.
+        "says_negotiable": bool(re.search(r"\bnegotiable\b", re.sub(r"\[[^\]]*\]", "", text), re.I)),
         "no_salary_figure": not salaries,
     }
 

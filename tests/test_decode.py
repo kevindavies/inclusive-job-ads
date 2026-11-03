@@ -93,6 +93,10 @@ class Pay(unittest.TestCase):
     def test_negotiable(self):
         self.assertTrue(decode.analyse("£40k-£48k, negotiable")["pay"]["says_negotiable"])
 
+    def test_negotiable_in_placeholder_does_not_count(self):
+        r = decode.analyse("£30,000 [confirm: is it negotiable?]")
+        self.assertFalse(r["pay"]["says_negotiable"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,8 +1,8 @@
 # inclusive-job-ads
 
-A Claude skill that reviews a job ad the way a thoughtful colleague would. It
-finds what draws people in and what quietly tells some of them "you won't fit
-in", then suggests specific, kind fixes.
+A Claude skill that helps you write a job ad, or reviews one the way a
+thoughtful colleague would. It finds what draws people in and what quietly
+tells some of them "you won't fit in", then suggests specific, kind fixes.
 
 ## Why
 
@@ -47,6 +47,11 @@ get the most from it, because fixing one template fixes every ad built on it.
 
 It can also compare two versions of an ad, which catches trade-offs. An ad can
 get warmer and lose its salary in the same edit.
+
+Ask Claude to write a job ad and the skill kicks in there too, whether or not
+you mention inclusion. It puts pay and flexibility near the top, keeps the
+must-haves short, describes the job rather than the person, and uses
+placeholders instead of inventing a salary. Then it checks its own draft.
 
 ## A note on language
 
@@ -93,8 +98,9 @@ against Crossref.
 | [false-alarms](examples/false-alarms.md) | [review](examples/false-alarms-review.md) | Leans communal on raw count, nearly empty after context |
 | [balanced-but-not-fine](examples/balanced-but-not-fine.md) | [review](examples/balanced-but-not-fine-review.md) | A balanced word count on an ad with real problems |
 | [injection](examples/injection.md) | [review](examples/injection-review.md) | Hidden instructions to the AI, flagged and ignored |
+| [brief](examples/write-brief.md) | [written ad](examples/write-brief-ad.md) | A thin brief turned into an ad, with placeholders, not invented facts |
 
-The reviews were written by Claude following the skill, with no other briefing.
+The reviews and the written ad were produced by Claude following the skill, with no other briefing.
 
 ## Install
 
@@ -108,7 +114,7 @@ cp -r inclusive-job-ads/inclusive-job-ads ~/.claude/skills/
 In Claude.ai, zip the `inclusive-job-ads` folder and upload it under
 Settings > Capabilities > Skills.
 
-Then paste a job ad and ask Claude to review it.
+Then ask Claude to write a job ad, or paste one and ask it to review it.
 
 ## Run the script on its own
 
