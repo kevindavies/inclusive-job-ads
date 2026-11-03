@@ -11,15 +11,15 @@ See it in action: https://kevindavies.github.io/inclusive-job-ads/
 Several years ago every candidate for a role I'd posted was a man. A colleague
 asked whether I'd shown the job spec to any women. I hadn't.
 
-The research that explains it is about belonging. In Gaucher, Friesen and
-Kay's 2011 experiments, masculine-coded wording made jobs less appealing to
+The research that explains it is about belonging. In [Gaucher, Friesen and
+Kay's 2011 experiments](https://doi.org/10.1037/a0022530), masculine-coded wording made jobs less appealing to
 women, and the reason wasn't ability. The ad wasn't saying "you can't do
 this". It was saying "you won't fit in".
 
 Word choice turned out to be only part of it. The strongest field evidence on
 who actually applies is about other things: whether the ad states pay,
-whether flexibility is real and specific, and whether the wording quietly
-says "young". So this skill checks those first.
+whether flexibility is [real and specific](https://doi.org/10.1086/711226),
+and whether the wording [quietly says "young"](https://doi.org/10.1086/733492). So this skill checks those first.
 
 It also looks for the opposite signal, the lines that tell someone they'd
 belong. "Need to duck out for school pick-ups? We do too." does more than any
@@ -66,25 +66,30 @@ Caring words aren't a problem to balance away. The skill never suggests
 cutting them to even a score. It asks whether each agentic trait is something
 the job really needs.
 
-Most of the research compared women and men. A large 2025 study found the
-effect follows how strongly someone identifies with masculine stereotypes, not
-sex alone. A first study of trans and non-binary job seekers found inclusive
-wording read as a sign of safety. That's a start, not a settled answer, and
+Most of the research compared women and men. A [large 2025
+study](https://doi.org/10.1073/pnas.2409854122) found the effect follows how strongly someone identifies with masculine stereotypes, not
+sex alone. A [first study of trans and non-binary job
+seekers](https://doi.org/10.1111/josi.70065) found inclusive wording read as a
+sign of safety. That's a start, not a settled answer, and
 the skill says so.
 
 ## How strong is the evidence?
 
 Mixed, and the skill is honest about it.
 
-- **Field evidence on real applications:** stating pay and whether it's
-  negotiable, advertising flexibility, and avoiding age-stereotyped wording.
-- **Contested:** gendered trait words. One large study found swapping them
-  raised applications from women. Another, of about 300,000 postings, found
-  negligible effects.
+- **Field evidence on real applications:** [stating pay and whether it's
+  negotiable](https://doi.org/10.1287/mnsc.2014.1994), [advertising
+  flexibility](https://www.gov.uk/government/publications/encouraging-employers-to-advertise-jobs-as-flexible),
+  and [avoiding age-stereotyped wording](https://doi.org/10.1086/733492).
+- **Contested:** gendered trait words. [One large
+  study](https://doi.org/10.1073/pnas.2409854122) found swapping them raised
+  applications from women. [Another, of about 300,000
+  postings](https://doi.org/10.1287/mnsc.2023.4674), found negligible effects.
 - **Untested:** many common tips, including "apply even if you don't meet
   every requirement". The popular claim that women only apply when they meet
-  100% of requirements traces to an unpublished report, and a UK trial found
-  a much smaller gap.
+  100% of requirements traces to an unpublished report, and [a UK
+  trial](https://www.bi.team/wp-content/uploads/2022/03/Gender-differences-in-response-to-requirements-in-job-adverts-March-2022.pdf)
+  found a much smaller gap.
 
 Every citation is in
 [`references/evidence.md`](inclusive-job-ads/references/evidence.md), checked
@@ -129,8 +134,9 @@ python3 -m unittest discover tests
 
 ## For B Corps
 
-B Lab's Standards v2.1 include "The company implements inclusive hiring
-practices" (JEDI2.g) as one of the actions a company can choose. If yours has
+[B Lab's Standards v2.1](https://www.bcorporation.net/en-us/standards/performance-requirements/)
+include "The company implements inclusive hiring practices"
+([JEDI2.g](https://kb.bimpactassessment.net/en/support/solutions/articles/43000760403)) as one of the actions a company can choose. If yours has
 chosen it, this skill gives you a repeatable review of your job ads, and a
 record you can keep. It's independent of B Lab and doesn't certify anything.
 
@@ -139,8 +145,11 @@ record you can keep. It's independent of B Lab and doesn't certify anything.
 - Much of the research measured appeal or intentions, not who applied, and
   most of it comes from North America and Europe.
 - It's not legal advice. Where wording carries legal risk, the skill says so
-  and points to the local regulator's guidance, such as ACAS and the EHRC in
-  the UK or the EEOC in the US.
+  and points to the local regulator's guidance, such as
+  [ACAS](https://www.acas.org.uk/recruitment/how-to-advertise-a-job) and
+  [the EHRC](https://www.equalityhumanrights.com/guidance/guidance-discriminatory-adverts)
+  in the UK or [the EEOC](https://www.eeoc.gov/prohibited-employment-policiespractices)
+  in the US.
 - The word lists are English only.
 - A welcoming ad for a badly defined job is still a bad ad.
 - Tools catch words. People catch what the words imply. Ask someone who'd
