@@ -364,6 +364,8 @@ footer {
 
 @media (max-width: 520px) { .site-head .label span:last-child { display: none; } }
 
+.note p:not(.sig) { text-wrap: pretty; }
+
 /* Animation: the final, marked-up state is the default. Script adds .play to run the edits from the clean draft. */
 @keyframes strike { from { background-size: 0% 100%; color: var(--ink); } 60% { color: var(--ink); } to { background-size: 100% 100%; color: #6a7178; } }
 @keyframes write { from { clip-path: inset(-1em 100% -1em -1em); } to { clip-path: inset(-1em -1em -1em -1em); } }
@@ -407,7 +409,7 @@ footer {
       <div class="slug" aria-hidden="true"><span>Job spec, draft 2</span><span>Edits in blue</span></div>
       <h2 class="ad-title">Senior Product Builder, Payments</h2>
       <aside class="note" aria-label="Note from the editor">
-      <p>Lovely energy! Just say what the job is, and the pay.</p>
+      <p>The role sounds great. Let’s make sure the right person can see themselves in&nbsp;it.</p>
       <p class="sig">K</p>
     </aside>
       <p class="ad">
