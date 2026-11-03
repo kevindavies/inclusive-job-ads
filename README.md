@@ -4,6 +4,8 @@ A Claude skill that helps you write a job ad, or reviews one the way a
 thoughtful colleague would. It finds what draws people in and what quietly
 tells some of them "you won't fit in", then suggests specific, kind fixes.
 
+See it in action: https://kevindavies.github.io/inclusive-job-ads/
+
 ## Why
 
 Several years ago every candidate for a role I'd posted was a man. A colleague

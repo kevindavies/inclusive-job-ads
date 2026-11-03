@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A Claude skill that writes job ads, and reviews them the way a kind colleague would. Free and open source.">
+<meta property="og:title" content="inclusive-job-ads">
+<meta property="og:description" content="A Claude skill that writes job ads, and reviews them the way a kind colleague would.">
+<meta property="og:image" content="https://kevindavies.github.io/inclusive-job-ads/og.png">
+<meta property="og:url" content="https://kevindavies.github.io/inclusive-job-ads/">
+<meta name="twitter:card" content="summary_large_image">
+<title>inclusive-job-ads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Layout: a typescript proof on a desk, marked up in blue pencil. Blue, not red: an editor's suggestion, not a correction. */
+:root {
+  --desk: #e6e9ec;
+  --paper: #fbfbf8;
+  --ink: #1d2125;
+  --muted: #5b636b;
+  --pencil: #2456b8;
+  --pencil-soft: rgba(36, 86, 184, 0.12);
+  --rule: #cfd5db;
+  --postit: #fdf7c4;
+  --font-type: "Courier Prime", "Courier New", ui-monospace, monospace;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --font-body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  /* Rhythm: 17px body on a 1.6 line; spacing in half-lines */
+  --u: 0.8rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --desk: #15191d; --paper: #ecebe5; --ink: #1d2125; --muted: #9aa3ab;
+    --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --desk: #15191d; --paper: #ecebe5; --ink: #1d2125; --muted: #9aa3ab;
+  --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --text: #e3e6e9; --link: #8fb1f2; } }
+:root { --text: var(--ink); --link: var(--pencil); }
+:root[data-theme="dark"] { --text: #e3e6e9; --link: #8fb1f2; }
+
+body {
+  margin: 0;
+  background: var(--desk);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+.wrap {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding-block: clamp(2rem, 6vw, 4.5rem) 4rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: calc(var(--u) * 6);
+}
+
+/* Hero: the proof and its margin note */
+.proof-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 8rem;
+  gap: 1.5rem;
+  align-items: start;
+}
+.paper {
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3.25rem);
+  box-shadow: 0 1px 0 var(--rule), 0 18px 40px -24px rgba(20, 30, 40, 0.45);
+  transform: rotate(-0.4deg);
+  min-width: 0;
+}
+.slug {
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7279;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px dashed #c9cdd1;
+  padding-bottom: 0.6rem;
+  margin: 0 0 1.4rem;
+}
+.ad-title {
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+  margin: 0 0 0.6rem;
+}
+.ad {
+  font-family: var(--font-type);
+  font-size: clamp(1.15rem, 3vw, 1.6rem);
+  line-height: 2.9;
+  margin: 0;
+  padding-top: 0.4em;
+}
+.ad .line { display: block; margin-bottom: 0.5em; }
+.ad .line:last-child { margin-bottom: 0; }
+/* One edit: the struck original on the line, the new words written above it */
+.edit { position: relative; display: inline-block; text-align: center; line-height: 1.5; }
+.edit::before {
+  content: attr(data-new);
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 1.3em;
+  padding-inline: 0.15em;
+}
+.edit del, .line > del {
+  text-decoration: none;
+  background-image: linear-gradient(transparent 50%, var(--pencil) 50%, var(--pencil) 58%, transparent 58%);
+  background-repeat: no-repeat;
+  color: #6a7178;
+}
+.edit ins {
+  position: absolute;
+  left: 50%;
+  bottom: 1.05em;
+  transform: translateX(-50%) rotate(-1.5deg);
+  white-space: nowrap;
+  text-decoration: none;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 1.3em;
+  line-height: 1;
+  color: var(--pencil);
+}
+.caret { color: var(--pencil); font-weight: 700; }
+.edit.add { min-width: 1ch; text-align: left; }
+.edit.add { display: inline; }
+.edit.add ins { position: static; white-space: normal; display: inline-block; vertical-align: baseline; max-width: calc(100% - 1.5em); transform: none; line-height: 1.6; padding-right: 0.2em; }
+.edit.add .caret { margin-right: 0.15em; }
+.wordcheck {
+  margin: 1.8rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px dashed #c9cdd1;
+  font-family: var(--font-type);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #555c63;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 1rem;
+}
+.wordcheck dt { font-weight: 700; }
+.wordcheck dd { margin: 0; }
+
+.note {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 1.75rem;
+  line-height: 1.15;
+  color: var(--pencil);
+  background: var(--postit);
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.04), transparent 18%);
+  padding: 1.4rem 1.2rem 1.3rem;
+  transform: rotate(3deg);
+  position: absolute;
+  top: 7rem;
+  right: -10rem;
+  margin: 0;
+  width: 15rem;
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+  box-shadow: 2px 12px 18px -10px rgba(20, 30, 40, 0.55);
+}
+.note p { margin: 0; }
+.note .sig { margin-top: 0.5rem; text-align: right; font-weight: 700; }
+
+/* Below the hero: one column of display type, then quiet supporting text */
+.intro {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: calc(var(--u) * 3);
+  row-gap: calc(var(--u) * 2);
+}
+.label {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: var(--u);
+  align-items: baseline;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  margin: 0;
+}
+.label h1 { font: inherit; font-weight: 700; color: var(--text); margin: 0; }
+.label span::before { content: "\00b7"; margin-right: var(--u); }
+.lede {
+  grid-column: 1 / span 9;
+  font-family: var(--font-display);
+  font-weight: 350;
+  font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  font-optical-sizing: auto;
+  text-wrap: balance;
+  margin: 0 0 var(--u);
+}
+.lede em { font-style: italic; font-weight: 300; }
+.support {
+  grid-column: span 5;
+  margin: 0;
+  color: var(--muted);
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+.support:first-of-type { grid-column: 1 / span 5; }
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--u) * 3);
+}
+.cols > div {
+  min-width: 0;
+  display: grid;
+  gap: calc(var(--u) * 1.5);
+  align-content: start;
+  border-top: 1px solid var(--rule);
+  padding-top: calc(var(--u) * 1.5);
+}
+.cols h2 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+.cols p { margin: 0; font-size: 1rem; text-wrap: pretty; }
+.checks { list-style: none; margin: 0; padding: 0; counter-reset: check; }
+.checks li {
+  counter-increment: check;
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 1rem;
+}
+.checks li::before {
+  content: counter(check);
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--muted);
+  font-variant-numeric: oldstyle-nums;
+}
+.checks .tag { font-size: 0.75rem; letter-spacing: 0.02em; color: var(--muted); white-space: nowrap; }
+.small { font-size: 0.875rem !important; color: var(--muted); }
+
+pre {
+  margin: 0;
+  overflow-x: auto;
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  background: var(--paper);
+  color: var(--ink);
+  padding: var(--u) calc(var(--u) * 1.25);
+}
+a { color: var(--link); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+footer {
+  border-top: 1px solid var(--rule);
+  padding-top: calc(var(--u) * 2);
+  display: grid;
+  gap: calc(var(--u) * 1.5);
+}
+.closer {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 350;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  line-height: 1.2;
+  margin: 0;
+  text-wrap: balance;
+}
+.credits { margin: 0; max-width: 70ch; font-size: 0.875rem; color: var(--muted); text-wrap: pretty; }
+
+@media (max-width: 860px) {
+  .proof-row { grid-template-columns: minmax(0, 1fr); }
+  .note {
+    position: relative; top: auto; right: auto;
+    float: right;
+    width: 8.5rem;
+    font-size: 1.2rem;
+    padding: 0.8rem 0.7rem;
+    margin: 0.2rem -0.4rem 0.8rem 0.9rem;
+  }
+  .cols { grid-template-columns: minmax(0, 1fr); }
+  .intro { grid-template-columns: minmax(0, 1fr); }
+  .lede, .support, .support:first-of-type { grid-column: 1 / -1; }
+}
+
+/* Animation: the final, marked-up state is the default. Script adds .play to run the edits from the clean draft. */
+@keyframes strike { from { background-size: 0% 100%; color: var(--ink); } 60% { color: var(--ink); } to { background-size: 100% 100%; color: #6a7178; } }
+@keyframes write { from { clip-path: inset(-1em 100% -1em -1em); } to { clip-path: inset(-1em -1em -1em -1em); } }
+@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes stick {
+  0% { opacity: 0; transform: translate(1.5rem, -2.5rem) rotate(14deg) scale(1.08); box-shadow: 10px 30px 30px -12px rgba(20, 30, 40, 0.35); }
+  70% { opacity: 1; transform: translate(0, 0) rotate(2deg) scale(1); }
+  100% { opacity: 1; transform: rotate(3deg); }
+}
+.play .ad del { animation: strike 0.45s cubic-bezier(.5,0,.3,1) var(--d, 0s) both; }
+.play .ad ins { animation: write var(--w, 0.75s) steps(18, end) var(--d, 0s) both; }
+.play .ad .caret { animation: appear 0.2s var(--d, 0s) both; }
+.play .wordcheck .after { animation: appear 0.5s 8.4s both; }
+.play .note { animation: stick 0.7s cubic-bezier(.2,.8,.3,1) 8.9s both; }
+.replay-row { margin: 0.9rem 0 0; font-family: var(--font-type); font-size: 0.82rem; }
+.replay {
+  font: inherit;
+  color: var(--pencil);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.replay:focus-visible { outline: 2px solid var(--pencil); outline-offset: 2px; }
+.no-motion .replay-row { display: none; }
+@media (prefers-reduced-motion: reduce) { .replay-row { display: none; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <section class="proof-row" aria-label="A job spec, kindly edited">
+    <article class="paper">
+      <div class="slug" aria-hidden="true"><span>Job spec, draft 2</span><span>Edits in blue</span></div>
+      <h2 class="ad-title">Senior Product Builder, Payments</h2>
+      <aside class="note" aria-label="Note from the editor">
+      <p>Lovely energy! Just say what the job is, and the pay.</p>
+      <p class="sig">K</p>
+    </aside>
+      <p class="ad">
+        <span class="line">We're looking for a <del style="--d:0.6s">rockstar</del> product builder</span>
+        <span class="line">to <span class="edit" data-new="help small shops grow"><del style="--d:1.5s">dominate the market</del><ins style="--d:2.1s">help small shops grow</ins></span>.</span>
+        <span class="line">You're <span class="edit" data-new="someone who cares"><del style="--d:3.2s">a competitive self-starter</del><ins style="--d:3.9s">someone who cares</ins></span>.</span>
+        <span class="line"><span class="edit" data-new="£65,000 to £80,000"><del style="--d:5s">Competitive salary</del><ins style="--d:5.6s">£65,000 to £80,000</ins></span>.</span>
+        <span class="line"><span class="edit add"><span class="caret" aria-hidden="true" style="--d:6.6s">&#8248;</span><ins style="--d:6.8s; --w:1.4s">Need to duck out for school <span style="white-space: nowrap">pick-ups?</span> We do too.</ins></span></span>
+      </p>
+      <dl class="wordcheck">
+        <dt>Before</dt><dd>masculine-coded, no salary</dd>
+        <dt class="after">After</dt><dd class="after">no trait words, a salary range, flexibility shown</dd>
+      </dl>
+      <p class="replay-row"><button type="button" class="replay" id="replay">Replay the edits</button></p>
+    </article>
+  </section>
+
+  <section class="intro">
+    <div class="label"><h1>inclusive-job-ads</h1><span>Claude skill</span><span>MIT licence</span></div>
+    <p class="lede">A Claude skill that writes job ads, and reviews them the way a <em>kind colleague</em> would.</p>
+    <p class="support">An ad rarely says “you can’t do this”. Too often it says “you won’t fit in”. The skill finds those lines, and the ones that tell people they’d belong, then suggests specific fixes.</p>
+    <p class="support">Every check is grounded in published research, and says how strong that research is. It’s built to support inclusive hiring practices like those used in B Lab’s standards for B Corps. It’s free and open source.</p>
+  </section>
+
+  <section class="cols">
+    <div>
+      <h2>What it checks</h2>
+      <ol class="checks">
+        <li>Pay <span class="tag">field evidence</span></li>
+        <li>Flexibility <span class="tag">field evidence</span></li>
+        <li>Age wording <span class="tag">field evidence</span></li>
+        <li>Disability and adjustments <span class="tag">lab, legal</span></li>
+        <li>Requirement lists <span class="tag">mixed</span></li>
+        <li>Gendered and agentic words <span class="tag">contested</span></li>
+        <li>Culture, perks and caring <span class="tag">guidance</span></li>
+      </ol>
+      <p class="small">Strongest evidence first.</p>
+    </div>
+    <div>
+      <h2>Install</h2>
+      <pre><code>git clone https://github.com/kevindavies/inclusive-job-ads.git
+cp -r inclusive-job-ads/inclusive-job-ads ~/.claude/skills/</code></pre>
+      <p>Then ask Claude to write a job ad, or paste one and ask for a review.</p>
+    </div>
+    <div>
+      <h2>For any size of employer</h2>
+      <p>A founder’s first hire, a B Corp, or a global employer with a library of templates. Fix one template and every ad built on it improves.</p>
+      <p><a href="https://github.com/kevindavies/inclusive-job-ads">See it on GitHub</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <p class="closer">Tools catch words. People catch what the words imply.</p>
+    <p class="credits">Word lists from Kat Matfield’s <a href="https://gender-decoder.katmatfield.com/">Gender Decoder</a>, used under the MIT licence. Built on research by Gaucher, Friesen and Kay (2011) and others, all listed in the repo. Independent of B Lab; it doesn’t certify anything. Made by <a href="https://beaks.co">Kevin Davies</a>.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var paper = document.querySelector('.paper');
+  if (!paper || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function play() {
+    paper.classList.remove('play');
+    void paper.offsetWidth;
+    paper.classList.add('play');
+  }
+  play();
+  var btn = document.getElementById('replay');
+  if (btn) btn.addEventListener('click', play);
+})();
+</script>
+</body>
+</html>
