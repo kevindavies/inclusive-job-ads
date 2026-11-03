@@ -85,14 +85,16 @@ against Crossref.
 
 ## Examples
 
-| Ad | What it shows |
-| --- | --- |
-| [sea-of-dudes](examples/sea-of-dudes.md) | The obvious case |
-| [before](examples/before.md) and [after](examples/after.md) | A rewrite that gets warmer and loses its salary |
-| [false-alarms](examples/false-alarms.md) | Leans communal on raw count, nearly empty after context |
-| [balanced-but-not-fine](examples/balanced-but-not-fine.md) | A balanced word count on an ad with real problems |
+| Ad | Review | What it shows |
+| --- | --- | --- |
+| [sea-of-dudes](examples/sea-of-dudes.md) | [review](examples/sea-of-dudes-review.md) | The obvious case |
+| [before](examples/before.md) | [review](examples/before-review.md) | Two different salaries, twelve must-haves |
+| [before](examples/before.md) and [after](examples/after.md) | [comparison](examples/before-after-review.md) | A rewrite that gets warmer and loses its salary |
+| [false-alarms](examples/false-alarms.md) | [review](examples/false-alarms-review.md) | Leans communal on raw count, nearly empty after context |
+| [balanced-but-not-fine](examples/balanced-but-not-fine.md) | [review](examples/balanced-but-not-fine-review.md) | A balanced word count on an ad with real problems |
+| [injection](examples/injection.md) | [review](examples/injection-review.md) | Hidden instructions to the AI, flagged and ignored |
 
-Each has a sample review next to it.
+The reviews were written by Claude following the skill, with no other briefing.
 
 ## Install
 
