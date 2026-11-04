@@ -66,7 +66,7 @@ body {
 .wrap {
   max-width: 68rem;
   margin: 0 auto;
-  padding-block: var(--line) calc(var(--line) * 3);
+  padding-block: 0 calc(var(--line) * 3);
   padding-left: max(24px, env(safe-area-inset-left, 0px));
   padding-right: max(24px, env(safe-area-inset-right, 0px));
   display: grid;
@@ -215,9 +215,9 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
-.repo-link span { color: var(--muted); font-weight: 400; margin-left: 0.25em; }
+.repo-link b { color: var(--muted); font-weight: 400; margin-left: 0.2em; }
 .repo-link:hover, .repo-link:focus-visible { color: var(--link); }
-.repo-link:hover span { color: inherit; }
+.repo-link:hover b { color: inherit; }
 .label {
   display: flex;
   flex-wrap: wrap;
@@ -231,7 +231,7 @@ body {
 .label h1 { font: inherit; font-weight: 700; color: var(--text); margin: 0; }
 .label h1 a { color: inherit; text-decoration: none; }
 .label h1 a:hover { color: var(--link); }
-.label span::before { content: "\00b7"; margin-right: var(--u); }
+.label > span::before { content: "\00b7"; margin-right: var(--u); }
 .lede {
   max-width: 14em;
   font-family: var(--font-display);
@@ -585,20 +585,43 @@ footer { align-items: baseline; }
   .marked-ad { padding-left: var(--half); }
 }
 .marked-key { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+
+/* Sticky header: name and links on the left, the two pages on the right */
+html { scroll-padding-top: 4.5rem; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--desk); }
+.site-head {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--desk); box-shadow: 0 0 0 100vmax var(--desk); clip-path: inset(0 -100vmax);
+  display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: flex-end;
+  gap: var(--line); padding: calc(var(--line) * 0.75) 0 0; margin-bottom: calc(var(--line) * -2);
+  border-bottom: 1px solid var(--rule);
+}
+.site-head .label { padding-bottom: 0.75rem; min-width: 0; }
+.repo-link { font-weight: 400; color: var(--muted); }
+.site-nav { display: flex; gap: var(--line); flex-shrink: 0; }
+.site-nav a {
+  font-size: 0.9375rem; line-height: 1.25rem; font-weight: 600; color: var(--muted); text-decoration: none; white-space: nowrap;
+  padding-bottom: calc(0.75rem - 3px); border-bottom: 3px solid transparent; margin-bottom: -1px;
+}
+.site-nav a:hover { color: var(--text); }
+.site-nav a[aria-current="page"] { color: var(--text); border-bottom-color: var(--link); }
+.site-nav a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+@media (max-width: 860px) { .site-head { margin-bottom: calc(var(--line) * -1); } }
+@media (max-width: 380px) { .site-nav { gap: var(--half); } .site-nav a { font-size: 0.875rem; } }
 </style>
 </head>
 <body>
 
 <main class="wrap">
   <header class="site-head">
-    <div class="label"><h1><a href="../">inclusive-job-ads</a></h1><span>Guidelines and AI skill</span><span>MIT licence</span></div>
-    <a class="repo-link" href="https://github.com/kevindavies/inclusive-job-ads">GitHub<span aria-hidden="true">&#8599;</span></a>
+    <div class="label"><h1><a href="../">inclusive-job-ads</a></h1><span>Guidelines and AI skill</span><span>MIT licence</span><span><a class="repo-link" href="https://github.com/kevindavies/inclusive-job-ads">GitHub<b aria-hidden="true">&#8599;</b></a></span></div>
+    <nav class="site-nav" aria-label="Pages"><a href="/">Guidelines</a><a href="/check/" aria-current="page">Check an ad</a></nav>
   </header>
   <div class="lede-block grid12">
   <h2 class="lede">Check a job ad</h2>
   <p class="lede-sub">Paste an ad, and it’s checked against each of the seven guidelines as you type. It runs in your browser, so your ad isn’t sent anywhere or saved.</p>
   <p class="lede-sub"><strong>Note:</strong> <em>This version doesn’t use AI. It just matches words.</em><br>If you add it to your own AI assistant, it can apply the same guidelines <em>and</em> read what the words imply.</p>
-  <p class="lede-links"><a href="../#guidelines">Read the guidelines</a><span aria-hidden="true">•</span><a href="../#use">Use them with your AI tools</a></p>
+  <p class="lede-links"><a href="../">The guidelines</a><span aria-hidden="true">•</span><a href="../#use">Use them with your AI tools</a></p>
   </div>
   <section class="sec grid12" id="check" aria-labelledby="h-check">
     <div class="sec-label">

@@ -15,6 +15,8 @@ s=region(full, ['CHECKHEAD', 'CHECK'])
 chk=region(full, ['MAIN', 'TEASER'])
 chk=chk.replace('<title>inclusive-job-ads</title>', '<title>Check a job ad</title>', 1)
 chk=chk.replace('<h1>inclusive-job-ads</h1>', '<h1><a href="../">inclusive-job-ads</a></h1>', 1)
+s=s.replace(' data-nav="main"', ' aria-current="page"').replace(' data-nav="check"', '')
+chk=chk.replace(' data-nav="check"', ' aria-current="page"').replace(' data-nav="main"', '')
 s=s.replace('<meta name="claude:viewport-fit-sides" content="cover">\n','')
 def page(s, head):
     i=s.index('<style>'); m=s.index('<main')
