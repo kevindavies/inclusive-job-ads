@@ -550,6 +550,7 @@ footer {
         <button type="button" role="tab" id="tab-chatgpt" aria-controls="use-chatgpt" aria-selected="false" tabindex="-1">ChatGPT</button>
         <button type="button" role="tab" id="tab-gemini" aria-controls="use-gemini" aria-selected="false" tabindex="-1">Gemini</button>
         <button type="button" role="tab" id="tab-copilot" aria-controls="use-copilot" aria-selected="false" tabindex="-1">Copilot</button>
+        <button type="button" role="tab" id="tab-ats" aria-controls="use-ats" aria-selected="false" tabindex="-1">Your ATS</button>
       </div>
       <section class="panel" id="use-claude" role="tabpanel" aria-labelledby="tab-claude">
         <h3>Claude</h3>
@@ -712,7 +713,14 @@ Suggested rewrites: up to five, original line then replacement, framed around wh
 Always end with: Could someone who'd read it differently from you take a look? Tools catch words. People catch what the words imply.
 
 Limits to be honest about: most of this research is from North America and Europe, and much of it measured appeal rather than who applied. This isn't legal advice; where wording carries legal risk, point to the local regulator (in the UK, ACAS and the EHRC; in the US, the EEOC). A welcoming ad for a badly defined job is still a bad ad.</pre><button type="button" class="copy" hidden>Copy the prompt</button></div>
-        <p class="small next">Using the AI in your applicant tracking system? Paste this shorter version into its guidelines or tone box.</p>
+      </section>
+      <section class="panel" id="use-ats" role="tabpanel" aria-labelledby="tab-ats">
+        <h3>Your applicant tracking system</h3>
+        <ol class="steps">
+          <li>Find where your ATS lets you guide its AI writer, often a “guidelines”, “tone” or “instructions” box.</li>
+          <li>Paste in the short prompt below. It’s under 1,000 characters, and it’s about writing ads, not reviewing them.</li>
+          <li>Generate an ad as usual.</li>
+        </ol>
         <div class="code prompt-box"><pre class="prompt" data-prompt="short" tabindex="0" aria-label="The short prompt for an applicant tracking system">Write job ads that welcome everyone who could do the job.
 - State pay as a range, and say whether it's negotiable. Never write "competitive salary" without a figure.
 - Put flexibility near the top, and be specific about hours, location and how people really work.
@@ -722,6 +730,7 @@ Limits to be honest about: most of this research is from North America and Europ
 - Don't add physical requirements the job doesn't need. Offer adjustments for applying and interviewing.
 - Show what working here is like, rather than claiming values.
 - Never invent pay, benefits or requirements. Leave a [placeholder] instead.</pre><button type="button" class="copy" hidden>Copy the prompt</button></div>
+        <p class="small">If your ATS has no such box, use one of the other tabs to write or review the ad, then paste it in.</p>
       </section>
     </div>
     <div class="more">
