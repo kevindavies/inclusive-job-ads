@@ -180,17 +180,44 @@ def canonical(amount):
     return re.sub(r"to|–|—", "-", a)
 
 
+# A small amount followed by a rate ("£12.50 per hour") is pay, not a perk.
+RATE_AFTER = re.compile(
+    r"\s*(?:(?:an?|per|/)\s*(?:hour|hr|day|shift|week)\b|(?:p/?h|ph)\b|hourly\b)", re.IGNORECASE)
+# Money that belongs to the job, not the person: "a £50k marketing budget", "revenue of £2m".
+NOT_PAY_WORDS = r"(?:budget|revenue|turnover|funding|portfolio|pipeline|spend|investment|grant)"
+NOT_PAY_BEFORE = re.compile(NOT_PAY_WORDS + r"s?(?:\s+of)?(?:\s+(?:over|up to|around|about))?\s*$", re.IGNORECASE)
+NOT_PAY_AFTER = re.compile(r"\s*(?:[a-z]+\s+){0,2}" + NOT_PAY_WORDS + r"s?\b", re.IGNORECASE)
+
+
+def not_pay(line, start, end):
+    return bool(NOT_PAY_BEFORE.search(line[max(0, start - 40):start]) or NOT_PAY_AFTER.match(line, end))
+
+
 def pay(lines):
     mentions, salaries = [], []
     for n, line in enumerate(lines, 1):
-        found = [m.group(0).strip() for m in PAY_RE.finditer(line)]
+        matches = list(PAY_RE.finditer(line))
+        found = [m.group(0).strip() for m in matches]
         if found or PAY_WORDS.search(line):
             mention = {"line": n, "amounts": found, "context": context(line)}
-            small = [a for a in found if not salary_like(a)]
+            small, other, pay_here = [], [], []
+            for m in matches:
+                a = m.group(0).strip()
+                if not_pay(line, m.start(), m.end()):
+                    other.append(a)
+                elif salary_like(a) or RATE_AFTER.match(line, m.end()):
+                    pay_here.append(a)
+                else:
+                    small.append(a)
+            notes = []
             if small:
-                mention["note"] = f"probably not salary: {', '.join(small)}"
+                notes.append(f"probably not salary: {', '.join(small)}")
+            if other:
+                notes.append(f"not pay: {', '.join(other)}")
+            if notes:
+                mention["note"] = "; ".join(notes)
             mentions.append(mention)
-            salaries += [a for a in found if salary_like(a)]
+            salaries += pay_here
     text = "\n".join(lines)
     distinct = {}
     for a in salaries:
