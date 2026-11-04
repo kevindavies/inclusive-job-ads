@@ -1259,11 +1259,16 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     a.addEventListener('click', function () { select(document.getElementById(a.getAttribute('data-tab'))); });
   });
 })();
+// The intro animations play once per browser. Storage can be blocked, so failing safe means playing them.
+function introSeen() { try { return localStorage.getItem('ija-intro-seen') === '1'; } catch (e) { return false; } }
+function markIntroSeen() { try { localStorage.setItem('ija-intro-seen', '1'); } catch (e) {} }
 (function () {
   // The lede's adjective gets retyped: backspaced, retyped, then selected and replaced.
+  // Like the edits below, it plays on the first visit only.
   var typed = document.querySelector('.lede-sub .typed');
   var caret = document.querySelector('.lede-sub .tcaret');
   if (!typed || !caret || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (introSeen()) return;
   var steps = [], t = 2600;
   function at(ms, fn) { t += ms; steps.push([t, fn]); }
   function set(text) { return function () { typed.textContent = text; }; }
@@ -1279,7 +1284,7 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
   at(450, function () { typed.classList.remove('selected'); typed.textContent = ''; caret.hidden = false; });
   at(250, function () {});
   type('a helpful', 70);
-  at(2600, function () { caret.hidden = true; });
+  at(2600, function () { caret.hidden = true; markIntroSeen(); });
   steps.forEach(function (s) { setTimeout(s[1], s[0]); });
 })();
 (function () {
@@ -1290,6 +1295,10 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     void paper.offsetWidth;
     paper.classList.add('play');
   }
+  var btn = document.getElementById('replay');
+  if (btn) btn.addEventListener('click', play);
+  // Seen it before: show the finished edits, and leave the replay button.
+  if (introSeen()) return;
   // Show the clean draft, and start the edits when the reader starts scrolling.
   paper.classList.add('play', 'waiting');
   var events = ['scroll', 'wheel', 'touchmove', 'keydown'];
@@ -1298,11 +1307,10 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     clearTimeout(fallback);
     paper.classList.add('resumed');
     paper.classList.remove('waiting');
+    markIntroSeen();
   }
   events.forEach(function (e) { window.addEventListener(e, go, { passive: true }); });
   // A screen tall enough not to scroll still gets the edits, a little later.
   var fallback = setTimeout(go, 9000);
-  var btn = document.getElementById('replay');
-  if (btn) btn.addEventListener('click', play);
 })();
 </script>

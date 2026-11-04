@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BlAxUe/wxR5fLya3q8vt5N8hbDelfmiinPdEgwXLtnQ=' 'sha256-G40gkc2dR5Wz9ozlZvTOdSX+B/49p2vAWQXb7f2A5Qc=' 'sha256-MXjCV/vfmDK3pv+3/fvoFWNG5u/k27KESs7i7+adTaw=' 'sha256-Y1vflHLjjen9np+J6n8qlgl/kzwkJ31QmubwmXCNAd4=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BlAxUe/wxR5fLya3q8vt5N8hbDelfmiinPdEgwXLtnQ=' 'sha256-G40gkc2dR5Wz9ozlZvTOdSX+B/49p2vAWQXb7f2A5Qc=' 'sha256-MXjCV/vfmDK3pv+3/fvoFWNG5u/k27KESs7i7+adTaw=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Paste a job ad and check it against seven evidence-based guidelines. It runs in your browser, so your ad isn’t sent anywhere.">
@@ -996,11 +996,16 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     a.addEventListener('click', function () { select(document.getElementById(a.getAttribute('data-tab'))); });
   });
 })();
+// The intro animations play once per browser. Storage can be blocked, so failing safe means playing them.
+function introSeen() { try { return localStorage.getItem('ija-intro-seen') === '1'; } catch (e) { return false; } }
+function markIntroSeen() { try { localStorage.setItem('ija-intro-seen', '1'); } catch (e) {} }
 (function () {
   // The lede's adjective gets retyped: backspaced, retyped, then selected and replaced.
+  // Like the edits below, it plays on the first visit only.
   var typed = document.querySelector('.lede-sub .typed');
   var caret = document.querySelector('.lede-sub .tcaret');
   if (!typed || !caret || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (introSeen()) return;
   var steps = [], t = 2600;
   function at(ms, fn) { t += ms; steps.push([t, fn]); }
   function set(text) { return function () { typed.textContent = text; }; }
@@ -1016,7 +1021,7 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
   at(450, function () { typed.classList.remove('selected'); typed.textContent = ''; caret.hidden = false; });
   at(250, function () {});
   type('a helpful', 70);
-  at(2600, function () { caret.hidden = true; });
+  at(2600, function () { caret.hidden = true; markIntroSeen(); });
   steps.forEach(function (s) { setTimeout(s[1], s[0]); });
 })();
 (function () {
@@ -1027,6 +1032,10 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     void paper.offsetWidth;
     paper.classList.add('play');
   }
+  var btn = document.getElementById('replay');
+  if (btn) btn.addEventListener('click', play);
+  // Seen it before: show the finished edits, and leave the replay button.
+  if (introSeen()) return;
   // Show the clean draft, and start the edits when the reader starts scrolling.
   paper.classList.add('play', 'waiting');
   var events = ['scroll', 'wheel', 'touchmove', 'keydown'];
@@ -1035,12 +1044,11 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     clearTimeout(fallback);
     paper.classList.add('resumed');
     paper.classList.remove('waiting');
+    markIntroSeen();
   }
   events.forEach(function (e) { window.addEventListener(e, go, { passive: true }); });
   // A screen tall enough not to scroll still gets the edits, a little later.
   var fallback = setTimeout(go, 9000);
-  var btn = document.getElementById('replay');
-  if (btn) btn.addEventListener('click', play);
 })();
 </script>
 </body>
