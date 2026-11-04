@@ -407,8 +407,19 @@ footer {
   border-top: 1px solid var(--rule);
   padding-top: calc(var(--u) * 2);
   display: grid;
-  gap: calc(var(--u) * 1.5);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: calc(var(--u) * 2) calc(var(--u) * 3);
 }
+.foot-main, .foot-used { display: grid; gap: calc(var(--u) * 1.5); align-content: start; }
+.foot-used h2 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+.foot-used p { margin: 0; font-size: 0.95rem; text-wrap: pretty; }
 .closer {
   font-family: var(--font-display);
   font-style: italic;
@@ -437,6 +448,7 @@ footer {
   .wordcheck { order: 2; }
   .replay-row { order: 3; }
   .wrap { gap: calc(var(--u) * 3.5); }
+  footer { grid-template-columns: minmax(0, 1fr); }
   /* Size the typewriter text so the longest edited line, "You're a competitive self-starter.", fits on one line */
   .ad { font-size: min(1.15rem, calc((100vw - 5.5rem) / 20.8)); }
   /* Until the reader scrolls, don't hold an empty space where the post-it will land */
@@ -736,15 +748,19 @@ Limits to be honest about: most of this research is from North America and Europ
     <div class="more">
       <h2>For any size of employer</h2>
       <p>A founder’s first hire, a B Corp, or a global employer with a library of templates. Fix one template and every ad built on it improves.</p>
-      <h2 class="next">Used it?</h2>
-      <p>Tell us what worked and what felt off. It’s how the checks get better. <a href="mailto:inclusive-job-ads@beaks.co?subject=inclusive-job-ads%3A%20how%20it%20went&amp;body=Which%20tool%20did%20you%20use%20%28Claude%2C%20ChatGPT%2C%20Gemini%2C%20Copilot%20or%20something%20else%29%3F%0A%0A%0AWhat%20worked%3F%0A%0A%0AWhat%20felt%20off%3F%0A%0A%0A%28Please%20only%20include%20ad%20text%20if%20the%20ad%20is%20already%20public.%29%0A">Email <span style="white-space: nowrap">inclusive-job-ads@beaks.co</span></a></p>
       <p class="small"><a href="https://github.com/kevindavies/inclusive-job-ads">The code is on GitHub</a>, if that’s your thing.</p>
     </div>
   </section>
 
   <footer>
-    <p class="closer">Tools catch words. People catch what the words imply.</p>
-    <p class="credits">Word lists from Kat Matfield’s <a href="https://gender-decoder.katmatfield.com/">Gender Decoder</a>, used under the MIT licence. Built on research by Gaucher, Friesen and Kay (2011) and others, all listed in the repo. Independent of B Lab; it doesn’t certify anything. Made by <a href="https://beaks.co">Kevin Davies</a>.</p>
+    <div class="foot-main">
+      <p class="closer">Tools catch words. People catch what the words imply.</p>
+      <p class="credits">Word lists from Kat Matfield’s <a href="https://gender-decoder.katmatfield.com/">Gender Decoder</a>, used under the MIT licence. Built on research by Gaucher, Friesen and Kay (2011) and others, all listed in the repo. Independent of B Lab; it doesn’t certify anything. Made by <a href="https://beaks.co">Kevin Davies</a>.</p>
+    </div>
+    <div class="foot-used">
+      <h2>Used it?</h2>
+      <p>Tell us what worked and what felt off. It’s how the checks get better. <a href="mailto:inclusive-job-ads@beaks.co?subject=inclusive-job-ads%3A%20how%20it%20went&amp;body=Which%20tool%20did%20you%20use%20%28Claude%2C%20ChatGPT%2C%20Gemini%2C%20Copilot%20or%20something%20else%29%3F%0A%0A%0AWhat%20worked%3F%0A%0A%0AWhat%20felt%20off%3F%0A%0A%0A%28Please%20only%20include%20ad%20text%20if%20the%20ad%20is%20already%20public.%29%0A">Email <span style="white-space: nowrap">inclusive-job-ads@beaks.co</span></a></p>
+    </div>
   </footer>
 </main>
 
