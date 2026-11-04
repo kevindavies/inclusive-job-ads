@@ -102,6 +102,7 @@ licence for a desk job). Is there an offer of adjustments?
 
 **Requirements.** How many must-haves? Are nice-to-haves dressed as
 must-haves? Do proxies like a "top university" degree stand in for skills?
+Is a degree required where experience would do?
 
 **Gendered terms** (legal risk for titles). "Salesman", "chairman", generic
 "he", "he/she", "s/he", "guys". Suggest "you", "they" or the role name.

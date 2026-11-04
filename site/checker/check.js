@@ -62,10 +62,10 @@ function makeChecker(L) {
     flex: /\b(?:flexib\w*|part[- ]time|hybrid|remote(?:ly)?|compressed hours|job[- ]shar\w*|school (?:run|pick-?ups?)|core hours|work(?:ing)? from (?:home|anywhere)|four[- ]day|4[- ]day|\d days? (?:a|per) week|term[- ]time|(?:nine|9)[- ]day fortnight|flexi[- ]?time|school hours|annuali[sz]ed hours)\b/gi,
     // Flexibility asked of the candidate, not offered: \"you must have the flexibility to work evenings\".
     flexDemand: /\b(?:must|need|needs|required|requires|willing|able|expected|prepared)\b[^.!?]*$/i,
-    hype: /\b(?:rock ?stars?|ninjas?|gurus?|unicorns?|superstars?|wizards?|work hard,? play hard|beer fridge|beers?|drinks|ping[- ]pong|hit the ground running|crush(?:ing)? (?:it|targets)|smash(?:ing)? (?:it|targets))\b/gi,
+    hype: /\b(?:rock ?stars?|ninjas?|gurus?|unicorns?|superstars?|wizards?|work hard,? play hard|beer fridge|beers?|(?:friday|after[- ]work|team) drinks|drinks (?:culture|trolley)|ping[- ]pong|hit the ground running|crush(?:ing)? (?:it|targets)|smash(?:ing)? (?:it|targets))\b/gi,
     proxy: /\b(?:top (?:university|universities|tier university)|russell group|ivy league|oxbridge|first[- ]class degree|2:1)\b/gi,
     claim: /\b(?:we value diversity|equal opportunit\w*|diverse and inclusive|committed to diversity)\b/i,
-    reqHead: /^\s*(?:#+\s*)?(?:requirements|what matters most|essential\w*|must[- ]haves?|what you(?:['’]ll)? need|you(?:['’]ll)? (?:have|need)|about you|skills and experience|what we(?:['’]re| are) looking for|who you are|experience)\b/i,
+    reqHead: /^\s*(?:#+\s*)?(?:requirements|what matters most|essential\w*|must[- ]haves?|what you(?:['’]ll)? need|you(?:['’]ll)? (?:have|need)|about you|skills and experience|what we(?:['’]re| are) looking for|what we need|who you are|experience)\b/i,
     niceHead: /\b(?:nice to have|nice-to-have|desirable|bonus|would be great|great if you)\b/i,
     bullet: /^\s*(?:[-*•]|\d+[.)])\s+/
   };
@@ -135,22 +135,23 @@ function makeChecker(L) {
 
     // 4 Adjustments
     var phys = uniq(scan(R.physical, 4, 'physical'));
-    var adj = R.adjust.test(lines.join('\n'));
+    var flat = lines.join(' '); // so a phrase split across a line break still matches
+    var adj = R.adjust.test(flat);
     var p4 = [];
     if (phys.length) p4.push('Asks for ' + q(phys) + '. Is it needed for the job?');
     if (!adj) p4.push('No offer of adjustments for applying or interviewing.');
     res.push(p4.length ? ['look', p4.join(' ')] : ['ok', 'Offers adjustments, and no physical requirements found.']);
 
     // 5 Must-haves
-    var count = -1, nice = false;
+    var count = -1, nice = false, reqLines = [];
     for (var i = 0; i < lines.length; i++) {
       if (R.niceHead.test(lines[i])) nice = true;
       if (count < 0 && R.reqHead.test(lines[i]) && !R.bullet.test(lines[i])) {
-        count = 0;
+        count = 0; reqLines = [];
         for (var j = i + 1; j < lines.length; j++) {
           var l = lines[j];
           if (!l.trim()) continue;
-          if (R.bullet.test(l)) { count++; continue; }
+          if (R.bullet.test(l)) { count++; reqLines.push(l); continue; }
           if (/^\s+\S/.test(l)) continue; // a bullet's continuation line
           break;
         }
@@ -160,7 +161,10 @@ function makeChecker(L) {
     var p5 = [];
     if (count > 5) p5.push(count + ' must-haves' + (nice ? '.' : ', and no “nice to have” list.') + ' Keep three to five essentials.');
     if (proxy.length) p5.push(q(proxy) + ' stands in for a skill.');
-    var n5 = shortYrs.length ? 'Asks for ' + q(shortYrs) + '. That’s fine, though saying what the experience should prove is clearer.' : '';
+    // A plain degree requirement gets a question, not a flag: some jobs do need one.
+    var degree = !proxy.length && reqLines.some(function (l) { return /\bdegree\b/i.test(l); });
+    var n5 = [shortYrs.length ? 'Asks for ' + q(shortYrs) + '. That’s fine, though saying what the experience should prove is clearer.' : '',
+      degree ? 'Asks for a degree. Does the job need one, or would experience do just as well?' : ''].filter(Boolean).join(' ');
     if (p5.length) res.push(['look', p5.join(' '), n5]);
     else if (count < 0) res.push(['read', 'Couldn’t find a requirements list. Count the must-haves yourself.', n5]);
     else res.push(['ok', count + ' must-haves. That’s a sensible number.', n5]);
@@ -185,7 +189,7 @@ function makeChecker(L) {
 
     // 7 Show, don't claim
     var hype = uniq(scan(R.hype, 7, 'hype'));
-    var claim = R.claim.test(lines.join('\n'));
+    var claim = R.claim.test(flat);
     if (hype.length) res.push(['look', 'Hype or drinks culture: ' + q(hype) + '.']);
     else if (claim) res.push(['read', 'Claims values. Does it also show how people really work?']);
     else res.push(['read', 'Can’t tell from the words. Does it show what working there is like?']);
