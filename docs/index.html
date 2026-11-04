@@ -422,14 +422,21 @@ footer {
 
 @media (max-width: 860px) {
   .proof-row { grid-template-columns: minmax(0, 1fr); }
+  /* Phones: the post-it sticks on after the edits, so no line has to squeeze round it */
+  .paper { display: flex; flex-direction: column; }
   .note {
+    order: 1;
     position: relative; top: auto; right: auto;
-    float: right;
-    width: 8.5rem;
-    font-size: 1.2rem;
-    padding: 0.8rem 0.7rem;
-    margin: 0.2rem -0.4rem 0.8rem 0.9rem;
+    float: none;
+    align-self: flex-end;
+    width: 12rem;
+    font-size: 1.5rem;
+    padding: 1rem 1rem 0.9rem;
+    margin: 0.4rem -0.9rem 1.2rem 0;
   }
+  .wordcheck { order: 2; }
+  .replay-row { order: 3; }
+  .wrap { gap: calc(var(--u) * 3.5); }
   .cols { grid-template-columns: minmax(0, 1fr); grid-template-areas: "checks" "use" "more"; grid-template-rows: auto; }
   .intro { grid-template-columns: minmax(0, 1fr); }
   .lede, .support, .support:first-of-type { grid-column: 1 / -1; }
