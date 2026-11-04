@@ -237,6 +237,7 @@ other guidelines. Its example ads come from `examples/`.
 ```bash
 python3 site/build.py site/page.html docs/index.html /tmp/still.html
 node site/checker/parity.js   # browser and Python counts must match
+node site/checker/test.js     # the checker's own rules
 ```
 
 ## Security

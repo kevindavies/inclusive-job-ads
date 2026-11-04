@@ -59,12 +59,14 @@ function makeChecker(L) {
   // Reading checks: plain patterns, so each finding can point at the words.
   var R = {
     age: /\b(?:young|youthful|recent (?:graduate|grad)s?|new grads?|digital natives?|energetic|mature)\b/gi,
-    years: /\b\d{1,2}\s?\+?\s?(?:years?|yrs)\b/gi,
+    years: /\b(?:\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s?\+?\s?(?:years?|yrs)\b/gi,
     ceiling: /\b(?:no more than|up to|maximum of|max\.?)\s+\d{1,2}\s+(?:years?|yrs)\b/gi,
     gendered: /\b(?:salesm[ae]n|chairm[ae]n|foreman|manpower|craftsman|workman|he\/she|s\/he|he or she|his\/her|his or her|guys|he|him|his)\b/gi,
     physical: /\b(?:must be able to lift|heavy lifting|physically fit|fit and active|on your feet(?: a lot| all day)?|able[- ]bodied|stand for long periods|(?:full (?:uk )?|clean )?driving licen[cs]e|driver['’]?s licen[cs]e|own (?:car|transport))\b/gi,
     adjust: /\b(?:reasonable adjustments?|adjustments?|accommodations?|accessib\w*|access needs|what would help you|let us know (?:if|what) you need|tell us (?:if|what) you need)\b/i,
-    flex: /\b(?:flexib\w*|part[- ]time|hybrid|remote(?:ly)?|compressed hours|job[- ]shar\w*|school (?:run|pick-?ups?)|core hours|work(?:ing)? from home|four[- ]day|4[- ]day|\d days? (?:a|per) week|term[- ]time)\b/gi,
+    flex: /\b(?:flexib\w*|part[- ]time|hybrid|remote(?:ly)?|compressed hours|job[- ]shar\w*|school (?:run|pick-?ups?)|core hours|work(?:ing)? from (?:home|anywhere)|four[- ]day|4[- ]day|\d days? (?:a|per) week|term[- ]time|(?:nine|9)[- ]day fortnight|flexi[- ]?time|school hours|annuali[sz]ed hours)\b/gi,
+    // Flexibility asked of the candidate, not offered: \"you must have the flexibility to work evenings\".
+    flexDemand: /\b(?:must|need|needs|required|requires|willing|able|expected|prepared)\b[^.!?]*$/i,
     hype: /\b(?:rock ?stars?|ninjas?|gurus?|unicorns?|superstars?|wizards?|work hard,? play hard|beer fridge|beers?|drinks|ping[- ]pong|hit the ground running|crush(?:ing)? (?:it|targets)|smash(?:ing)? (?:it|targets))\b/gi,
     proxy: /\b(?:top (?:university|universities|tier university)|russell group|ivy league|oxbridge|first[- ]class degree|2:1)\b/gi,
     claim: /\b(?:we value diversity|equal opportunit\w*|diverse and inclusive|committed to diversity)\b/i,
@@ -72,6 +74,10 @@ function makeChecker(L) {
     niceHead: /\b(?:nice to have|nice-to-have|desirable|bonus|would be great|great if you)\b/i,
     bullet: /^\s*(?:[-*•]|\d+[.)])\s+/
   };
+
+  var WORDNUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
+    'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+  function yearsOf(t) { var w = t.toLowerCase().match(/^[a-z]+/); return w ? WORDNUM.indexOf(w[0]) : parseInt(t, 10); }
 
   return function check(text) {
     var lines = norm(text).split(/\r?\n/);
@@ -102,13 +108,19 @@ function makeChecker(L) {
     else res.push(['ok', 'Gives ' + f[0] + ', and says whether it’s negotiable.']);
 
     // 2 Flexibility
-    var firstFlex = -1, flexWords = [];
-    lines.forEach(function (l, n) { all(R.flex, l).forEach(function (h) { if (firstFlex < 0) firstFlex = n; flexWords.push(h[2]); mark(n, h[0], h[1], 2, 'flex'); }); });
-    if (firstFlex < 0) res.push(['look', 'No mention of flexibility: hours, location or how people work.']);
+    var firstFlex = -1, flexWords = [], demands = [];
+    lines.forEach(function (l, n) { all(R.flex, l).forEach(function (h) {
+      if (/^flexib/i.test(h[2]) && R.flexDemand.test(l.slice(0, h[0]))) {
+        demands.push(l.slice(h[0]).split(/[.!?]/)[0].trim()); mark(n, h[0], h[1], 2, 'demand'); return;
+      }
+      if (firstFlex < 0) firstFlex = n; flexWords.push(h[2]); mark(n, h[0], h[1], 2, 'flex');
+    }); });
+    var asks = demands.length ? ' It also asks for “' + demands[0] + '” from the candidate, which is a demand, not an offer.' : '';
+    if (firstFlex < 0) res.push(['look', (demands.length ? 'Asks for “' + demands[0] + '” from the candidate, but doesn’t say what flexibility the job offers.' : 'No mention of flexibility: hours, location or how people work.')]);
     else {
       var rank = nonEmpty.indexOf(firstFlex) / Math.max(1, nonEmpty.length);
-      if (rank > 0.4) res.push(['look', 'Mentions ' + q(uniq(flexWords).slice(0, 2)) + ', but not until the bottom half. Say it near the top, and be specific.']);
-      else res.push(['ok', 'Mentions ' + q(uniq(flexWords).slice(0, 2)) + ' near the top. Check it’s specific.']);
+      if (rank > 0.4) res.push(['look', 'Mentions ' + q(uniq(flexWords).slice(0, 2)) + ', but not until the bottom half. Say it near the top, and be specific.' + asks]);
+      else res.push([demands.length ? 'look' : 'ok', 'Mentions ' + q(uniq(flexWords).slice(0, 2)) + ' near the top. Check it’s specific.' + asks]);
     }
 
     // 3 Age
@@ -116,7 +128,7 @@ function makeChecker(L) {
     var age = uniq(scan(R.age, 3, 'age')), ceil = uniq(scan(R.ceiling, 3, 'age'));
     var longYrs = [], shortYrs = [];
     lines.forEach(function (l, n) { all(R.years, l).forEach(function (h) {
-      var long = parseInt(h[2], 10) >= 7;
+      var long = yearsOf(h[2]) >= 7;
       (long ? longYrs : shortYrs).push(h[2]); mark(n, h[0], h[1], long ? 3 : 5, long ? 'age' : 'years');
     }); });
     longYrs = uniq(longYrs); shortYrs = uniq(shortYrs);
