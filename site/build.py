@@ -66,7 +66,7 @@ st=st.replace('</style>','''.site-head, .lede-block, .sec, footer, .replay-row {
 html, body { height: 100%; }
 .wrap { min-height: 100%; box-sizing: border-box; padding-block: 2rem; align-content: center; max-width: 56rem; }
 .proof-row { grid-template-columns: minmax(0, 1fr) 8rem; }
-.ad { font-size: 1.4rem; }
+.spec { font-size: 1.4rem; }
 .note { top: 11rem; }
 </style>''',1)
 open(still,'w').write(st)

@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BlAxUe/wxR5fLya3q8vt5N8hbDelfmiinPdEgwXLtnQ=' 'sha256-G40gkc2dR5Wz9ozlZvTOdSX+B/49p2vAWQXb7f2A5Qc=' 'sha256-MXjCV/vfmDK3pv+3/fvoFWNG5u/k27KESs7i7+adTaw=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BlAxUe/wxR5fLya3q8vt5N8hbDelfmiinPdEgwXLtnQ=' 'sha256-G40gkc2dR5Wz9ozlZvTOdSX+B/49p2vAWQXb7f2A5Qc=' 'sha256-A6ZKymtQRimLUoEZEgxkEXzpoZ9T4tMPaUju7MqTDug=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Guidelines for writing and reviewing job ads that welcome everyone who could do the job, with tools for Claude, ChatGPT, Gemini and Copilot. Free and open source.">
@@ -105,21 +105,21 @@ body {
   padding-bottom: 0.6rem;
   margin: 0 0 1.4rem;
 }
-.ad-title {
+.spec-title {
   font-family: var(--font-type);
   font-weight: 700;
   font-size: clamp(1.15rem, 2.4vw, 1.4rem);
   margin: 0 0 0.6rem;
 }
-.ad {
+.spec {
   font-family: var(--font-type);
   font-size: clamp(1.15rem, 3vw, 1.6rem);
   line-height: 1.7;
   margin: 0;
 }
-.ad .line { display: block; margin-bottom: 0.9em; }
-.ad .line:has(.edit:not(.add)) { padding-top: 1.15em; }
-.ad .line:last-child { margin-bottom: 0; }
+.spec .line { display: block; margin-bottom: 0.9em; }
+.spec .line:has(.edit:not(.add)) { padding-top: 1.15em; }
+.spec .line:last-child { margin-bottom: 0; }
 /* One edit: the struck original on the line, the new words written above it */
 .edit { position: relative; display: inline-block; text-align: center; line-height: 1.5; }
 .edit::before {
@@ -402,7 +402,7 @@ footer {
   .wrap { gap: calc(var(--line) * 2); }
   footer { grid-template-columns: minmax(0, 1fr); }
   /* Size the typewriter text so the longest edited line, "You're a competitive self-starter.", fits on one line */
-  .ad { font-size: min(1.15rem, calc((100vw - 5.5rem) / 20.8)); }
+  .spec { font-size: min(1.15rem, calc((100vw - 5.5rem) / 20.8)); }
   /* Until the reader scrolls, don't hold an empty space where the post-it will land */
   .play.waiting .note { display: none; }
   .lede { max-width: none; }
@@ -422,15 +422,15 @@ footer {
   70% { opacity: 1; transform: translate(0, 0) rotate(2deg) scale(1); }
   100% { opacity: 1; transform: rotate(3deg); }
 }
-.play .ad del { animation: strike 0.45s cubic-bezier(.5,0,.3,1) var(--d, 0s) both; }
-.play .ad ins { animation: write var(--w, 0.75s) steps(18, end) var(--d, 0s) both; }
-.play .ad .caret { animation: appear 0.2s var(--d, 0s) both; }
+.play .spec del { animation: strike 0.45s cubic-bezier(.5,0,.3,1) var(--d, 0s) both; }
+.play .spec ins { animation: write var(--w, 0.75s) steps(18, end) var(--d, 0s) both; }
+.play .spec .caret { animation: appear 0.2s var(--d, 0s) both; }
 .play .wordcheck .after { animation: appear 0.5s 8.4s both; }
 .play .note { animation: stick 0.7s cubic-bezier(.2,.8,.3,1) 8.9s both; }
 /* On load only the first strike runs; the rest wait for the first scroll, then follow on a second sooner. */
-.play.waiting .ad .line:not(:first-child) del, .play.waiting .ad ins, .play.waiting .ad .caret,
+.play.waiting .spec .line:not(:first-child) del, .play.waiting .spec ins, .play.waiting .spec .caret,
 .play.waiting .wordcheck .after, .play.waiting .note { animation-play-state: paused; }
-.play.resumed .ad .line:not(:first-child) del, .play.resumed .ad ins, .play.resumed .ad .caret { animation-delay: calc(var(--d, 0s) - 1s); }
+.play.resumed .spec .line:not(:first-child) del, .play.resumed .spec ins, .play.resumed .spec .caret { animation-delay: calc(var(--d, 0s) - 1s); }
 .play.resumed .wordcheck .after { animation-delay: 7.4s; }
 .play.resumed .note { animation-delay: 7.9s; }
 .replay-row { margin: 0.9rem 0 0; font-family: var(--font-type); font-size: 0.82rem; }
@@ -538,40 +538,40 @@ footer { align-items: baseline; }
 
 /* Check an ad */
 .checker { gap: var(--line); }
-.ad-input { display: grid; gap: var(--half); }
-.ad-input label { font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
+.chk-input { display: grid; gap: var(--half); }
+.chk-input label { font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
 /* The box: a transparent textarea over a backdrop that carries the highlights */
-.ad-field { position: relative; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; }
-.ad-field:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
-.ad-backdrop { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.ad-hl, #ad-text {
+.chk-field { position: relative; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; }
+.chk-field:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
+.chk-backdrop { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.chk-hl, #chk-text {
   box-sizing: border-box; margin: 0; border: 0;
   font-family: var(--font-type); font-size: 0.9375rem; line-height: 1.5rem; letter-spacing: normal;
   padding: var(--half) calc(var(--half) * 1.25);
   white-space: pre-wrap; overflow-wrap: break-word; word-break: normal; tab-size: 4;
 }
-.ad-hl { color: transparent; }
-.ad-hl mark { color: transparent; background: none; border-radius: 1px; }
-.ad-hl mark.flag { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 3 Q2 0.5 4 3 T8 3' fill='none' stroke='%232456b8' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x left bottom / 8px 4px; padding-bottom: 3px; }
+.chk-hl { color: transparent; }
+.chk-hl mark { color: transparent; background: none; border-radius: 1px; }
+.chk-hl mark.flag { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 3 Q2 0.5 4 3 T8 3' fill='none' stroke='%232456b8' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x left bottom / 8px 4px; padding-bottom: 3px; }
 /* A drawn wave, not text-decoration: Safari doesn't paint decorations on transparent text. The paper is light in both themes, so one blue works. */
-.ad-hl mark.hl { background: var(--mark-paper); }
-#ad-text {
+.chk-hl mark.hl { background: var(--mark-paper); }
+#chk-text {
   position: relative; display: block; width: 100%; min-height: 24rem; resize: vertical;
   color: var(--ink); background: transparent; caret-color: var(--ink);
   overflow-y: auto;
 }
-#ad-text:focus { outline: none; }
-.ad-key { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
-.ad-key .k-flag { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 3 Q2 0.5 4 3 T8 3' fill='none' stroke='%232456b8' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x left bottom / 8px 4px; padding-bottom: 3px; }
-.ad-key .k-hl { background: var(--mark); padding: 0 0.15em; }
+#chk-text:focus { outline: none; }
+.chk-key { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+.chk-key .k-flag { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 3 Q2 0.5 4 3 T8 3' fill='none' stroke='%232456b8' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x left bottom / 8px 4px; padding-bottom: 3px; }
+.chk-key .k-hl { background: var(--mark); padding: 0 0.15em; }
 .input-actions { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--half) var(--line); font-size: 0.875rem; line-height: 1.25rem; }
 .ex-label { color: var(--muted); }
-#ad-examples { display: contents; }
+#chk-examples { display: contents; }
 .input-actions button[aria-pressed=true] { color: var(--text); text-decoration: none; font-weight: 700; }
 .input-actions button { font: inherit; font-weight: 600; color: var(--link); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }
 .input-actions button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-#ad-clear { margin-left: auto; }
-#ad-count { color: var(--faint); }
+#chk-clear { margin-left: auto; }
+#chk-count { color: var(--faint); }
 .results { list-style: none; margin: 0; padding: 0; display: grid; }
 .results li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); column-gap: 0.5rem; padding: var(--half) 0 calc(var(--half) - 1px); border-top: 1px solid var(--rule); }
 .results li:last-child { border-bottom: 1px solid var(--rule); }
@@ -587,7 +587,7 @@ footer { align-items: baseline; }
 .status.look { color: var(--link); font-weight: 700; }
 .status.read { color: var(--muted); }
 @media (max-width: 520px) {
-  #ad-clear { margin-left: 0; }
+  #chk-clear { margin-left: 0; }
   .results .head { flex-direction: column; align-items: flex-start; }
 }
 
@@ -631,12 +631,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   <section class="proof-row" aria-label="A job spec, kindly edited">
     <article class="paper">
       <div class="slug" aria-hidden="true"><span>Job spec, draft 2</span><span>Edits in blue</span></div>
-      <h2 class="ad-title">Senior Product Builder, Payments</h2>
+      <h2 class="spec-title">Senior Product Builder, Payments</h2>
       <aside class="note" aria-label="Note from the editor">
       <p>The role sounds great. Let’s make sure the right person can see themselves in&nbsp;it.</p>
       <p class="sig">K</p>
     </aside>
-      <p class="ad">
+      <p class="spec">
         <span class="line">We're looking for a <del style="--d:0.6s">fearless rockstar</del> product builder</span>
         <span class="line">to <span class="edit" data-new="help small shops grow"><del style="--d:1.5s">dominate the market</del><ins style="--d:2.1s">help small shops grow</ins></span>.</span>
         <span class="line">You're <span class="edit" data-new="someone who cares"><del style="--d:3.2s">a competitive self-starter</del><ins style="--d:3.9s">someone who cares</ins></span>.</span>
@@ -1096,14 +1096,14 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
 /*/CHECKER*/
 
 (function () {
-  var box = document.getElementById('ad-text'), list = document.getElementById('ad-results');
+  var box = document.getElementById('chk-text'), list = document.getElementById('chk-results');
   var lists = document.getElementById('wordlists');
   if (!box || !list || !lists) return;
   var check = makeChecker(JSON.parse(lists.textContent));
     var names = ['State the pay', 'Say how flexible it is', 'Leave age out of it', 'Offer adjustments', 'Keep the must-haves short', 'Describe the job, not the person', 'Show, don’t claim'];
   var labels = { ok: 'Looks fine', look: 'Worth a look', read: 'Needs a person' };
-  var hl = document.getElementById('ad-hl'), key = document.getElementById('ad-key');
-  var count = document.getElementById('ad-count');
+  var hl = document.getElementById('chk-hl'), key = document.getElementById('chk-key');
+  var count = document.getElementById('chk-count');
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function render() {
     var r = check(box.value);
@@ -1143,7 +1143,7 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
   function sync() { hl.style.transform = 'translateY(' + (-box.scrollTop) + 'px)'; }
   box.addEventListener('scroll', sync);
   box.addEventListener('input', render);
-  var clear = document.getElementById('ad-clear'), exWrap = document.getElementById('ad-examples');
+  var clear = document.getElementById('chk-clear'), exWrap = document.getElementById('chk-examples');
   var examples = []; try { examples = JSON.parse(document.getElementById('examples').textContent); } catch (e) {}
   function pick(btn) { Array.prototype.forEach.call(exWrap.children, function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); }); }
   examples.forEach(function (x, i) {
@@ -1154,7 +1154,7 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
   });
   box.addEventListener('input', function () { pick(null); });
   clear.addEventListener('click', function () { box.value = ''; pick(null); render(); box.focus(); });
-  document.getElementById('ad-actions').hidden = false;
+  document.getElementById('chk-actions').hidden = false;
   render();
 })();
 </script>
