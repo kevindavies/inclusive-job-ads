@@ -169,6 +169,8 @@ against Crossref.
 | [false-alarms](examples/false-alarms.md) | [review](examples/false-alarms-review.md) | Leans communal on raw count, nearly empty after context |
 | [balanced-but-not-fine](examples/balanced-but-not-fine.md) | [review](examples/balanced-but-not-fine-review.md) | A balanced word count on an ad with real problems |
 | [injection](examples/injection.md) | [review](examples/injection-review.md) | Hidden instructions to the AI, flagged and ignored |
+| [cafe-shifts](examples/cafe-shifts.md) | [review](examples/cafe-shifts-review.md) | An hourly job: "any shifts", hours that vary, "young, energetic" |
+| [good](examples/good.md) | [review](examples/good-review.md) | What a finished ad can look like |
 | [brief](examples/write-brief.md) | [written ad](examples/write-brief-ad.md) | A thin brief turned into an ad, with placeholders, not invented facts |
 
 The reviews and the written ad were produced by Claude following the skill, with no other briefing.
