@@ -4,7 +4,7 @@ A Claude skill that helps you write a job ad, or reviews one the way a
 thoughtful colleague would. It finds what draws people in and what quietly
 tells some of them "you won't fit in", then suggests specific, kind fixes.
 
-See it in action: https://kevindavies.github.io/inclusive-job-ads/
+See it in action: https://inclusive-job-ads.beaks.co/
 
 Download it for Claude: [inclusive-job-ads.zip](https://github.com/kevindavies/inclusive-job-ads/releases/latest/download/inclusive-job-ads.zip), then see
 [Install](#install).
