@@ -72,11 +72,25 @@ or Enterprise plan, whoever runs your Claude account turns it on. If the menus
 have moved, see
 [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude).
 
-### ChatGPT and the Gemini app
+### ChatGPT, Gemini and Copilot
 
-Both now take skills in the same format, so the same zip should work where
-the app lets you add a skill. We haven't tested either yet. If you try it,
-please [tell us how it went](https://github.com/kevindavies/inclusive-job-ads/issues/new?template=tested-in.md).
+Copy the long prompt from [PROMPT.md](PROMPT.md) and paste it into the
+tool's standing instructions:
+
+- **ChatGPT:** a Project's instructions, or a custom GPT.
+- **Gemini:** a Gem, or a skill if your Gemini app has them.
+- **Microsoft 365 Copilot:** an agent's instructions.
+
+ChatGPT and the Gemini app are starting to take skill files too. Where yours
+does, you can upload the same zip instead. We haven't tested either route
+yet. If you try one, please
+[tell us how it went](https://github.com/kevindavies/inclusive-job-ads/issues/new?template=tested-in.md).
+
+### The AI in your applicant tracking system
+
+Most of these write the ad for you, and offer a short "guidelines" or "tone"
+box. Paste in the short prompt from [PROMPT.md](PROMPT.md). It's under 1,000
+characters.
 
 ### For developers
 
