@@ -269,9 +269,16 @@ body {
 
 .cols {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: calc(var(--u) * 3);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  grid-template-areas: "checks use" "more use";
+  grid-template-rows: auto 1fr;
+  gap: calc(var(--u) * 4) calc(var(--u) * 3);
 }
+.cols .checks-col { grid-area: checks; }
+.cols .use { grid-area: use; }
+.cols .more { grid-area: more; }
+.use .steps { max-width: 34rem; }
+.use .prompt-box pre.prompt { max-height: 18rem; }
 .cols > div {
   min-width: 0;
   display: grid;
@@ -423,7 +430,7 @@ footer {
     padding: 0.8rem 0.7rem;
     margin: 0.2rem -0.4rem 0.8rem 0.9rem;
   }
-  .cols { grid-template-columns: minmax(0, 1fr); }
+  .cols { grid-template-columns: minmax(0, 1fr); grid-template-areas: "checks" "use" "more"; grid-template-rows: auto; }
   .intro { grid-template-columns: minmax(0, 1fr); }
   .lede, .support, .support:first-of-type { grid-column: 1 / -1; }
   .lede { max-width: none; }
@@ -511,7 +518,7 @@ footer {
   </section>
 
   <section class="cols">
-    <div>
+    <div class="checks-col">
       <h2>What it checks</h2>
       <ol class="checks">
         <li>Pay <span class="tag">field evidence</span></li>
@@ -705,7 +712,7 @@ Limits to be honest about: most of this research is from North America and Europ
 - Never invent pay, benefits or requirements. Leave a [placeholder] instead.</pre><button type="button" class="copy" hidden>Copy the prompt</button></div>
       </section>
     </div>
-    <div>
+    <div class="more">
       <h2>For any size of employer</h2>
       <p>A founder’s first hire, a B Corp, or a global employer with a library of templates. Fix one template and every ad built on it improves.</p>
       <h2 class="next">Used it?</h2>
