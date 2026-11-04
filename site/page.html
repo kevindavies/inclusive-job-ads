@@ -15,6 +15,7 @@
   --rule: #cfd5db;
   --faint: #7b838b;
   --mark: rgba(36, 86, 184, 0.14);
+  --mark-paper: rgba(36, 86, 184, 0.16);
   --postit: #fdf7c4;
   --font-type: "Courier Prime", "Courier New", ui-monospace, monospace;
   --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
@@ -526,14 +527,30 @@ footer { align-items: baseline; }
 .checker { gap: var(--line); }
 .ad-input { display: grid; gap: var(--half); }
 .ad-input label { font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
-#ad-text {
-  box-sizing: border-box; width: 100%; min-height: 14rem; resize: vertical;
-  font-family: var(--font-type); font-size: 0.9375rem; line-height: 1.5rem;
-  color: var(--ink); background: var(--paper);
-  border: 1px solid var(--rule); border-radius: 2px;
+/* The box: a transparent textarea over a backdrop that carries the highlights */
+.ad-field { position: relative; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; }
+.ad-field:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
+.ad-backdrop { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.ad-hl, #ad-text {
+  box-sizing: border-box; margin: 0; border: 0;
+  font-family: var(--font-type); font-size: 0.9375rem; line-height: 1.5rem; letter-spacing: normal;
   padding: var(--half) calc(var(--half) * 1.25);
+  white-space: pre-wrap; overflow-wrap: break-word; word-break: normal; tab-size: 4;
 }
-#ad-text:focus-visible { outline: 2px solid var(--pencil); outline-offset: 2px; }
+.ad-hl { color: transparent; }
+.ad-hl mark { color: transparent; background: none; border-radius: 1px; }
+.ad-hl mark.flag { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 3 Q2 0.5 4 3 T8 3' fill='none' stroke='%232456b8' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x left bottom / 8px 4px; padding-bottom: 3px; }
+/* A drawn wave, not text-decoration: Safari doesn't paint decorations on transparent text. The paper is light in both themes, so one blue works. */
+.ad-hl mark.hl { background: var(--mark-paper); }
+#ad-text {
+  position: relative; display: block; width: 100%; min-height: 24rem; resize: vertical;
+  color: var(--ink); background: transparent; caret-color: var(--ink);
+  overflow-y: auto;
+}
+#ad-text:focus { outline: none; }
+.ad-key { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+.ad-key .k-flag { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 3 Q2 0.5 4 3 T8 3' fill='none' stroke='%232456b8' stroke-width='1.3'/%3E%3C/svg%3E") repeat-x left bottom / 8px 4px; padding-bottom: 3px; }
+.ad-key .k-hl { background: var(--mark); padding: 0 0.15em; }
 .input-actions { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--half) var(--line); font-size: 0.875rem; line-height: 1.25rem; }
 .ex-label { color: var(--muted); }
 #ad-examples { display: contents; }
@@ -556,23 +573,10 @@ footer { align-items: baseline; }
 .status.ok::before { content: "\2713\00a0"; }
 .status.look { color: var(--link); font-weight: 700; }
 .status.read { color: var(--muted); }
-.marked { display: grid; gap: var(--half); }
-.marked-h { margin: 0; font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
-.marked-ad {
-  font-family: var(--font-type); font-size: 0.9375rem; line-height: 1.75rem;
-  color: var(--text); background: none;
-  border-left: 3px solid var(--rule); padding: 0 0 0 calc(var(--line) * 0.75);
-  white-space: pre-wrap; overflow-wrap: anywhere;
-}
-.marked-ad mark { background: none; color: inherit; text-decoration: underline wavy var(--link); text-decoration-thickness: 1px; text-underline-offset: 0.25em; text-decoration-skip-ink: none; }
-.marked-ad mark.hl { text-decoration: none; background: var(--mark); }
-.marked-ad mark::after { content: attr(data-g); font-family: var(--font-body); font-weight: 700; font-size: 0.75em; font-variant-numeric: lining-nums; color: var(--link); vertical-align: 0.6em; line-height: 0; margin-left: 0.15em; }
 @media (max-width: 520px) {
   #ad-clear { margin-left: 0; }
   .results .head { flex-direction: column; align-items: flex-start; }
-  .marked-ad { padding-left: var(--half); }
 }
-.marked-key { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
 
 /* Sticky header: name and links on the left, the two pages on the right */
 html { scroll-padding-top: 4.5rem; }
@@ -676,7 +680,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <div class="ad-input">
         <label for="ad-text" class="sr-only">Your job ad</label>
         <div class="input-actions" id="ad-actions" hidden><span class="ex-label">Examples:</span><span id="ad-examples"></span><button type="button" id="ad-clear">Clear</button><span id="ad-count"></span></div>
-        <textarea id="ad-text" rows="14" spellcheck="false">Customer Success Manager
+        <div class="ad-field"><div class="ad-backdrop" aria-hidden="true"><div class="ad-hl" id="ad-hl"></div></div><textarea id="ad-text" rows="14" spellcheck="false">Customer Success Manager
 
 Salary: £32k to £38k depending on experience
 
@@ -709,15 +713,11 @@ The offer
 - 25 days' holiday plus bank holidays
 - Pension
 - Flexible working
-- Team socials every month</textarea>
+- Team socials every month</textarea></div>
+        <p class="ad-key" id="ad-key" hidden><span class="k-flag">Wavy line</span>: worth a look. <span class="k-hl">Shading</span>: check it, because it may be fine in context.</p>
         <noscript><p class="sidenote">The checker needs JavaScript. The guidelines above work without it.</p></noscript>
       </div>
       <ol class="results" id="ad-results" aria-live="polite"></ol>
-      <div class="marked" id="ad-marked-wrap" hidden>
-        <h3 class="marked-h">Your ad, marked up</h3>
-        <p class="marked-key">A wavy line is worth a look. Shading is for you to check, because it may be fine in context. The small number is the guideline.</p>
-        <div class="marked-ad" id="ad-marked"></div>
-      </div>
     </div>
   </section>
 
@@ -965,7 +965,12 @@ function makeChecker(L) {
   var HYPH = L.communal.concat(L.agentic).filter(function (s) { return s.indexOf('-') > -1; });
   var WORD = /[a-z]+(?:-[a-z]+)*/g;
 
-  function norm(t) { return t.normalize('NFKC').replace(/[‐‑‒­]/g, '-'); }
+  // NFKC character by character, keeping only changes that don't alter length,
+  // so positions still line up with the text in the box.
+  function norm(t) {
+    return Array.from(t).map(function (ch) { var n = ch.normalize('NFKC'); return n.length === ch.length ? n : ch; })
+      .join('').replace(/[\u2010\u2011\u2012\u00ad]/g, '-');
+  }
   function tokens(line) {
     var out = [], m, low = line.toLowerCase();
     WORD.lastIndex = 0;
@@ -1147,7 +1152,7 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
   var check = makeChecker(JSON.parse(lists.textContent));
     var names = ['State the pay', 'Say how flexible it is', 'Leave age out of it', 'Offer adjustments', 'Keep the must-haves short', 'Describe the job, not the person', 'Show, don’t claim'];
   var labels = { ok: 'Looks fine', look: 'Worth a look', read: 'Needs a person' };
-  var wrap = document.getElementById('ad-marked-wrap'), marked = document.getElementById('ad-marked');
+  var hl = document.getElementById('ad-hl'), key = document.getElementById('ad-key');
   var count = document.getElementById('ad-count');
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function render() {
@@ -1157,7 +1162,7 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     if (r.empty) {
       var e = document.createElement('li'); e.className = 'empty-row';
       e.innerHTML = '<span></span><p class="empty">Paste an ad above, and each guideline gets checked here.</p>';
-      list.appendChild(e); wrap.hidden = true; return;
+      list.appendChild(e); hl.innerHTML = ''; key.hidden = true; return;
     }
     r.results.forEach(function (x, i) {
       var el = document.createElement('li');
@@ -1166,24 +1171,28 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
         (x[2] ? '<p class="wc">' + esc(x[2]) + (i === 5 ? ' Word lists from Kat Matfield’s Gender Decoder.' : '') + '</p>' : '') + '</div>';
       list.appendChild(el);
     });
-    // Mark up the ad: one mark per span, earliest and longest first, no overlaps.
+    // Highlight the box: one mark per span, earliest and longest first, no overlaps.
+    // The backdrop shows the box's own text, so the marks sit under the right words.
     var byLine = {};
     r.marks.forEach(function (m) { (byLine[m.line] = byLine[m.line] || []).push(m); });
-    marked.innerHTML = r.lines.map(function (line, n) {
+    var raw = box.value.split('\n');
+    hl.innerHTML = raw.map(function (line, n) {
       var ms = (byLine[n] || []).sort(function (a, b) { return a.start - b.start || b.end - a.end; });
       var out = '', pos = 0;
       ms.forEach(function (m) {
         if (m.start < pos) return;
         var note = m.why === 'pay' || m.why === 'flex' || m.why === 'years' || m.why === 'trait';
-        out += esc(line.slice(pos, m.start)) + '<mark class="' + (note ? 'hl' : 'flag') + '" data-g="' + m.g + '">' + esc(line.slice(m.start, m.end)) + '</mark>';
+        out += esc(line.slice(pos, m.start)) + '<mark class="' + (note ? 'hl' : 'flag') + '">' + esc(line.slice(m.start, m.end)) + '</mark>';
         pos = m.end;
       });
       return out + esc(line.slice(pos));
-    }).join('\n');
-    wrap.hidden = !r.marks.length;
+    }).join('\n') + '\n ';
+    key.hidden = !r.marks.length;
+    sync();
   }
-  var timer;
-  box.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(render, 200); });
+  function sync() { hl.style.transform = 'translateY(' + (-box.scrollTop) + 'px)'; }
+  box.addEventListener('scroll', sync);
+  box.addEventListener('input', render);
   var clear = document.getElementById('ad-clear'), exWrap = document.getElementById('ad-examples');
   var examples = []; try { examples = JSON.parse(document.getElementById('examples').textContent); } catch (e) {}
   function pick(btn) { Array.prototype.forEach.call(exWrap.children, function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); }); }

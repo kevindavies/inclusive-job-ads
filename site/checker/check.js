@@ -4,7 +4,12 @@ function makeChecker(L) {
   var HYPH = L.communal.concat(L.agentic).filter(function (s) { return s.indexOf('-') > -1; });
   var WORD = /[a-z]+(?:-[a-z]+)*/g;
 
-  function norm(t) { return t.normalize('NFKC').replace(/[‐‑‒­]/g, '-'); }
+  // NFKC character by character, keeping only changes that don't alter length,
+  // so positions still line up with the text in the box.
+  function norm(t) {
+    return Array.from(t).map(function (ch) { var n = ch.normalize('NFKC'); return n.length === ch.length ? n : ch; })
+      .join('').replace(/[\u2010\u2011\u2012\u00ad]/g, '-');
+  }
   function tokens(line) {
     var out = [], m, low = line.toLowerCase();
     WORD.lastIndex = 0;
