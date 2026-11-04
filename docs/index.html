@@ -241,6 +241,11 @@ body {
 }
 .lede em { font-style: italic; font-weight: 300; }
 .lede .typed { white-space: nowrap; }
+.lede-block { display: grid; gap: calc(var(--u) * 1.5); }
+.ast { color: var(--pencil); font-family: var(--font-hand, inherit); }
+.lede .ast { font-size: 0.85em; vertical-align: 0.35em; margin-left: 0.04em; line-height: 0; }
+.lede-note { margin: 0; font-size: 0.875rem; color: var(--muted); }
+.lede-note .ast { margin-right: 0.25em; font-weight: 600; font-size: 1.35em; line-height: 0; vertical-align: -0.12em; }
 .lede .typed.selected { background: var(--pencil-soft); box-shadow: 0 0 0 0.04em var(--pencil-soft); }
 .lede .tcaret {
   display: inline-block;
@@ -390,6 +395,7 @@ footer {
   .cols { grid-template-columns: minmax(0, 1fr); }
   .intro { grid-template-columns: minmax(0, 1fr); }
   .lede, .support, .support:first-of-type { grid-column: 1 / -1; }
+  .lede { max-width: none; }
 }
 
 @media (max-width: 520px) { .site-head .label span:last-child { display: none; } }
@@ -440,7 +446,10 @@ footer {
     <div class="label"><h1>inclusive-job-ads</h1><span>Claude skill</span><span>MIT licence</span></div>
     <a class="repo-link" href="https://github.com/kevindavies/inclusive-job-ads">GitHub<span aria-hidden="true">&#8599;</span></a>
   </header>
-  <p class="lede">A Claude skill that helps write job ads, and reviews them the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would.</p>
+  <div class="lede-block">
+  <p class="lede">A Claude<span class="ast" aria-hidden="true">*</span> skill that helps write job ads, and reviews them the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would.</p>
+  <p class="lede-note"><span class="ast" aria-hidden="true">*</span>Also for ChatGPT, Gemini and Copilot. <a href="https://github.com/kevindavies/inclusive-job-ads#install">How to use it</a></p>
+  </div>
 
   <section class="proof-row" aria-label="A job spec, kindly edited">
     <article class="paper">
