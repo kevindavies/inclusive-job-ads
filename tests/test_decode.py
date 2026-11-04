@@ -97,6 +97,24 @@ class Pay(unittest.TestCase):
         r = decode.analyse("£30,000 [confirm: is it negotiable?]")
         self.assertFalse(r["pay"]["says_negotiable"])
 
+    def test_hourly_rate_is_pay(self):  # issue #1
+        for text in ("£12.50 per hour, 16 to 24 hours a week", "Pay: £11.44 an hour plus tips",
+                     "£12-£13/hour", "£95 a day", "£12.21ph"):
+            with self.subTest(text=text):
+                self.assertFalse(decode.analyse(text)["pay"]["no_salary_figure"])
+
+    def test_budget_is_not_pay(self):  # issue #3
+        for text in ("Salary £30k, negotiable. You'll manage a £50k marketing budget.",
+                     "Salary £30k. You'll look after a budget of £50k.",
+                     "Salary £30k. Grow revenue from £2m to £3m."):
+            with self.subTest(text=text):
+                r = decode.analyse(text)
+                self.assertEqual(r["pay"]["salary_figures"], ["£30k"])
+
+    def test_learning_budget_still_not_salary(self):
+        r = decode.analyse("£28,000. A learning budget of £1,000 a year")
+        self.assertEqual(r["pay"]["salary_figures"], ["£28,000"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -19,4 +19,17 @@ for (const f of fs.readdirSync(dir).filter(f => !f.includes('review') && f.endsW
   if (!ok) bad++;
   console.log(`${ok ? 'OK' : 'FAIL'}  ${f.padEnd(28)} ${want}, ${figs} salary figure(s)`);
 }
+// Single-line cases from the issues: both must find the same salary figures.
+const CASES = [
+  '£12.50 per hour, 16 to 24 hours a week', 'Pay: £11.44 an hour plus tips', '£12-£13/hour', '£95 a day', '£12.21ph',
+  "Salary £30k, negotiable. You'll manage a £50k marketing budget.", "Salary £30k. You'll look after a budget of £50k.",
+  '£28,000. A learning budget of £1,000 a year',
+];
+for (const t of CASES) {
+  const py = JSON.parse(cp.execFileSync('python3', [path.join(root, 'inclusive-job-ads/scripts/decode.py')], { input: t }));
+  const figs = py.pay.salary_figures, res = check(t).results[0][1];
+  const ok = figs.length === 0 ? /No salary figure/.test(res) : figs.length > 1 ? res.includes(figs.length + ' different') : res.includes(figs[0]);
+  if (!ok) bad++;
+  console.log(`${ok ? 'OK' : 'FAIL'}  case: ${t.slice(0, 40).padEnd(40)} py ${JSON.stringify(figs)} | js ${res.slice(0, 50)}`);
+}
 process.exit(bad ? 1 : 0);

@@ -7,6 +7,7 @@ d = importlib.util.module_from_spec(spec); spec.loader.exec_module(d)
 data = {
     "communal": d.COMMUNAL, "agentic": d.AGENTIC, "nonCoded": sorted(d.NON_CODED_EXCEPTIONS),
     "fixed": "|".join(d.LIKELY_FIXED), "pay": d.PAY_RE.pattern, "payWords": d.PAY_WORDS.pattern,
+    "rate": d.RATE_AFTER.pattern, "notPayBefore": d.NOT_PAY_BEFORE.pattern, "notPayAfter": d.NOT_PAY_AFTER.pattern,
 }
 blob = json.dumps(data, ensure_ascii=False)
 if sys.argv[1:] == ["--json"]:
