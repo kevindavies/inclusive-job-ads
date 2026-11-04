@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A Claude skill that helps write job ads, and reviews them the way a colleague would. Free and open source.">
+<meta name="description" content="Guidelines for writing and reviewing job ads that welcome everyone who could do the job, with tools for Claude, ChatGPT, Gemini and Copilot. Free and open source.">
 <meta property="og:title" content="inclusive-job-ads">
-<meta property="og:description" content="A Claude skill that helps write job ads, and reviews them the way a colleague would.">
+<meta property="og:description" content="Guidelines for writing and reviewing job ads that welcome everyone who could do the job.">
 <meta property="og:image" content="https://inclusive-job-ads.beaks.co/og.png">
 <meta property="og:url" content="https://inclusive-job-ads.beaks.co/">
 <meta name="twitter:card" content="summary_large_image">
@@ -240,24 +240,25 @@ body {
   margin: 0;
 }
 .lede em { font-style: italic; font-weight: 300; }
-.lede .typed { white-space: nowrap; }
+.typed { white-space: nowrap; font-style: italic; }
 .typed, .tcaret { -webkit-user-select: none; user-select: none; }
+.lede-sub { margin: 0; max-width: 40rem; font-size: 1.0625rem; text-wrap: pretty; }
 .lede-block { display: grid; gap: calc(var(--u) * 1.5); }
 .ast { color: var(--pencil); font-family: var(--font-hand, inherit); }
 .lede .ast { font-size: 0.85em; vertical-align: 0.35em; margin-left: 0.04em; line-height: 0; }
 .lede-note { margin: 0; font-size: 0.875rem; color: var(--muted); }
 .lede-note .ast { margin-right: 0.25em; font-weight: 600; font-size: 1.35em; line-height: 0; vertical-align: -0.12em; }
-.lede .typed.selected { background: var(--pencil-soft); box-shadow: 0 0 0 0.04em var(--pencil-soft); }
-.lede .tcaret {
+.typed.selected { background: var(--pencil-soft); box-shadow: 0 0 0 0.04em var(--pencil-soft); }
+.tcaret {
   display: inline-block;
-  width: 0.06em;
+  width: max(2px, 0.06em);
   height: 0.9em;
   margin-left: 0.04em;
   vertical-align: -0.08em;
   background: var(--pencil);
   animation: blink 1s steps(1) infinite;
 }
-.lede .tcaret[hidden] { display: none; }
+.tcaret[hidden] { display: none; }
 @keyframes blink { 50% { opacity: 0; } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .support {
@@ -274,7 +275,7 @@ body {
   grid-template-areas: "checks use";
   gap: calc(var(--u) * 4) calc(var(--u) * 3);
 }
-.cols .checks-col { grid-area: checks; }
+.cols .use-intro { grid-area: checks; }
 .cols .use { grid-area: use; }
 .band {
   display: grid;
@@ -485,7 +486,7 @@ footer {
   .lede { max-width: none; }
 }
 
-@media (max-width: 520px) { .site-head .label span:last-child { display: none; } }
+@media (max-width: 520px) { .site-head .label span { display: none; } }
 @media (max-width: 380px) { .site-head .label span { display: none; } }
 
 .note p:not(.sig) { text-wrap: pretty; }
@@ -525,18 +526,35 @@ footer {
 .no-motion .replay-row { display: none; }
 @media (prefers-reduced-motion: reduce) { .replay-row { display: none; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+.guide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: calc(var(--u) * 1.5) calc(var(--u) * 3);
+  border-top: 1px solid var(--rule);
+  padding-top: calc(var(--u) * 1.5);
+}
+.guide h2 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0; padding-top: 0.35em; }
+.guide > div { display: grid; gap: calc(var(--u) * 1.5); }
+.rules { list-style: none; margin: 0; padding: 0; counter-reset: rule; display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--u) * 2); }
+.rules li { max-width: 40rem; counter-increment: rule; display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); column-gap: 0.5rem; align-content: start; }
+.rules li::before { content: counter(rule); font-family: var(--font-display); font-style: italic; font-size: 1.25rem; color: var(--muted); font-variant-numeric: oldstyle-nums; grid-row: 1 / span 2; line-height: 1.3; }
+.rules h3 { margin: 0 0 0.3rem; font-family: var(--font-display); font-weight: 450; font-size: 1.25rem; line-height: 1.3; text-wrap: balance; }
+.rules h3 .tag { display: block; font-family: var(--font-body, inherit); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.02em; color: var(--muted); margin-top: 0.15rem; }
+.rules p { margin: 0; font-size: 1rem; text-wrap: pretty; }
+@media (max-width: 860px) { .guide, .rules { grid-template-columns: minmax(0, 1fr); } }
 </style>
 </head>
 <body>
 
 <main class="wrap">
   <header class="site-head">
-    <div class="label"><h1>inclusive-job-ads</h1><span>Claude skill</span><span>MIT licence</span></div>
+    <div class="label"><h1>inclusive-job-ads</h1><span>Guidelines and AI skill</span><span>MIT licence</span></div>
     <a class="repo-link" href="https://github.com/kevindavies/inclusive-job-ads">GitHub<span aria-hidden="true">&#8599;</span></a>
   </header>
   <div class="lede-block">
-  <p class="lede">A Claude<span class="ast" aria-hidden="true">*</span> skill that helps write job ads, and reviews them the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would.</p>
-  <p class="lede-note"><span class="ast" aria-hidden="true">*</span>Also for ChatGPT, Gemini and Copilot. <a href="#use" data-tab="tab-chatgpt">How to use it</a></p>
+  <p class="lede">Guidelines for writing and reviewing job ads that welcome everyone who could do the job.</p>
+  <p class="lede-sub">They also come as tools for AI assistants like Claude, ChatGPT, Gemini and Copilot, and for the AI built into applicant tracking systems. Then your AI gives feedback the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would. <a href="#use">Use them with AI</a></p>
   </div>
 
   <section class="proof-row" aria-label="A job spec, kindly edited">
@@ -563,26 +581,34 @@ footer {
   </section>
 
   <section class="intro">
-    <p class="support">An ad rarely says “you can’t do this”. Too often it says “you won’t fit in”. The skill finds those lines, and the ones that tell people they’d belong, then suggests specific fixes.</p>
-    <p class="support">Every check is grounded in published research, and says how strong that research is. It’s built to support inclusive hiring practices like those used in B Lab’s standards for B Corps. It’s free and open source.</p>
+    <p class="support">An ad rarely says “you can’t do this”. Too often it says “you won’t fit in”. These guidelines help you find those lines, and write the ones that tell people they’d belong.</p>
+    <p class="support">Every guideline is grounded in published research, and says how strong that research is. It’s built to support inclusive hiring practices like those used in B Lab’s standards for B Corps. It’s free and open source.</p>
+  </section>
+
+  <section class="guide">
+    <h2>The guidelines</h2>
+    <div>
+      <ol class="rules">
+        <li><h3>State the pay <span class="tag">field evidence</span></h3><p>Give a figure or a range, and say whether it’s negotiable. “Competitive salary” with no figure counts as missing. Unclear pay favours whoever feels entitled to ask.</p></li>
+        <li><h3>Say how flexible it is <span class="tag">field evidence</span></h3><p>Hours, location and how people really work, near the top. Not a line at the bottom of the perks.</p></li>
+        <li><h3>Leave age out of it <span class="tag">field evidence, legal</span></h3><p>Skip “young”, “recent graduate”, “digital native” and “energetic”. Swap years of experience for what those years should prove.</p></li>
+        <li><h3>Offer adjustments <span class="tag">lab evidence, legal</span></h3><p>Only list physical requirements the job needs. A driving licence for a desk job puts people off. Say you’ll make adjustments for applying and interviewing.</p></li>
+        <li><h3>Keep the must-haves short <span class="tag">mixed evidence</span></h3><p>Three to five essentials, then “nice to have” for the rest. A “top university” degree isn’t a skill.</p></li>
+        <li><h3>Describe the job, not the person <span class="tag">contested</span></h3><p>“Lead a team of four” is the job. “A natural leader” is a trait. Write “you” or “they”, never “he/she”, “salesman” or “guys”. Studies disagree on how much trait words matter, but they’re cheap to fix.</p></li>
+        <li><h3>Show, don’t claim <span class="tag">guidance</span></h3><p>“Need to duck out for school pick-ups? We do too.” beats any values statement. Skip “rockstar” and “work hard, play hard”. If caring matters, say what it looks like in the job.</p></li>
+      </ol>
+      <p class="small">Strongest evidence first. Every source is <a href="https://github.com/kevindavies/inclusive-job-ads/blob/main/inclusive-job-ads/references/evidence.md">listed in the repo</a>.</p>
+    </div>
   </section>
 
   <section class="cols">
-    <div class="checks-col">
-      <h2>What it checks</h2>
-      <ol class="checks">
-        <li>Pay <span class="tag">field evidence</span></li>
-        <li>Flexibility <span class="tag">field evidence</span></li>
-        <li>Age wording <span class="tag">field evidence</span></li>
-        <li>Disability and adjustments <span class="tag">lab, legal</span></li>
-        <li>Requirement lists <span class="tag">mixed</span></li>
-        <li>Gendered and agentic words <span class="tag">contested</span></li>
-        <li>Culture, perks and caring <span class="tag">guidance</span></li>
-      </ol>
-      <p class="small">Strongest evidence first.</p>
+    <div class="use-intro">
+      <h2>Use them with AI</h2>
+      <p>The skill applies every guideline for you. It helps write a new ad, or reviews yours: what’s working first, then up to three changes, each with how strong the evidence is.</p>
+      <p class="small">Pick your tool. The prompts are free to copy and change.</p>
     </div>
     <div class="use">
-      <h2 id="use">Use it</h2>
+      <h2 id="use" class="sr-only">Set it up</h2>
       <div class="tabs" role="tablist" aria-label="Choose your AI tool" hidden>
         <button type="button" role="tab" id="tab-claude" aria-controls="use-claude" aria-selected="true">Claude</button>
         <button type="button" role="tab" id="tab-chatgpt" aria-controls="use-chatgpt" aria-selected="false" tabindex="-1">ChatGPT</button>
@@ -844,8 +870,8 @@ Limits to be honest about: most of this research is from North America and Europ
 })();
 (function () {
   // The lede's adjective gets retyped: backspaced, retyped, then selected and replaced.
-  var typed = document.querySelector('.lede .typed');
-  var caret = document.querySelector('.lede .tcaret');
+  var typed = document.querySelector('.lede-sub .typed');
+  var caret = document.querySelector('.lede-sub .tcaret');
   if (!typed || !caret || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var steps = [], t = 700;
   function at(ms, fn) { t += ms; steps.push([t, fn]); }
