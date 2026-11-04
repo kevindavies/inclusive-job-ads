@@ -151,14 +151,20 @@ function makeChecker(L) {
     // 6 Describe the job, not the person (Kat Matfield's word lists)
     var a = hits(lines, L.agentic), c = hits(lines, L.communal);
     var aKept = a.filter(function (h) { return !h.fixed; }), cKept = c.filter(function (h) { return !h.fixed; });
-    aKept.forEach(function (h) { mark(h.line, h.start, h.end, 6, 'trait'); });
+    // A word already marked for another guideline ("fit and active") isn't listed again as a trait.
+    var traits = aKept.filter(function (h) { return !marks.some(function (m) { return m.line === h.line && m.start <= h.start && h.end <= m.end; }); });
+    traits.forEach(function (h) { mark(h.line, h.start, h.end, 6, 'trait'); });
     var set = uniq(a.concat(c).filter(function (h) { return h.fixed; }).map(function (h) { return h.fixed; }));
     var gend = uniq(scan(R.gendered, 6, 'gendered'));
     var p6 = [];
     if (gend.length) p6.push('Gendered wording: ' + q(gend) + '. Use “you”, “they” or the role name.');
-    if (aKept.length) p6.push('Trait words: ' + q(uniq(aKept.map(function (h) { return h.word; }))) + '. Keep only the ones the job needs.');
+    // A word list can't tell the job from the person, so trait words alone need a person to judge.
+    var tw = uniq(traits.map(function (h) { return h.word; }));
+    var tn = tw.length ? 'From the trait word lists: ' + q(tw.slice(0, 6)) + (tw.length > 6 ? ' and ' + (tw.length - 6) + ' more' : '') + '. Some may describe the job, not the person: “lead a team of four” is the job, “a natural leader” is a trait. Keep the ones the job needs.' : '';
     var wc = aKept.length + ' agentic and ' + cKept.length + ' communal trait words' + (set.length ? ', after setting aside ' + q(set.slice(0, 4)) + (set.length > 4 ? ' and others' : '') + ' as fixed terms' : '') + '.';
-    res.push(p6.length ? ['look', p6.join(' '), wc] : ['ok', 'No gendered wording or agentic trait words found.', wc]);
+    if (p6.length) res.push(['look', p6.concat(tn ? [tn] : []).join(' '), wc]);
+    else if (tn) res.push(['read', tn, wc]);
+    else res.push(['ok', 'No gendered wording or agentic trait words found.', wc]);
 
     // 7 Show, don't claim
     var hype = uniq(scan(R.hype, 7, 'hype'));

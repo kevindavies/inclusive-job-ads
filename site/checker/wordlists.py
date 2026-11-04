@@ -19,8 +19,7 @@ assert n == 1, 'marker not found'
 js = (pathlib.Path(__file__).parent / 'check.js').read_text()
 new, n = re.subn(r'/\*CHECKER\*/.*?/\*/CHECKER\*/', lambda m: '/*CHECKER*/\n' + js + '/*/CHECKER*/', new, flags=re.S)
 assert n == 1, 'checker marker not found'
-EXAMPLES = [("before", "A typical draft"), ("sea-of-dudes", "Sea of dudes"),
-            ("balanced-but-not-fine", "Warm but not fine"), ("after", "The rewrite")]
+EXAMPLES = [("before", "A typical draft"), ("balanced-but-not-fine", "Warm but not fine"), ("after", "The rewrite")]
 def plain(md):
     """Headings lose their #s and hard-wrapped paragraphs are joined, so it reads like a pasted ad."""
     md = re.sub(r'^#+\s*', '', md.strip(), flags=re.M)

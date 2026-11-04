@@ -14,6 +14,7 @@
   --pencil-soft: rgba(36, 86, 184, 0.12);
   --rule: #cfd5db;
   --faint: #7b838b;
+  --mark: rgba(36, 86, 184, 0.14);
   --postit: #fdf7c4;
   --font-type: "Courier Prime", "Courier New", ui-monospace, monospace;
   --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
@@ -30,13 +31,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --desk: #15191d; --paper: #ecebe5; --ink: #1d2125; --muted: #9aa3ab;
-    --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238; --faint: #737c84;
+    --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238; --faint: #737c84; --mark: rgba(143, 177, 242, 0.22);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --desk: #15191d; --paper: #ecebe5; --ink: #1d2125; --muted: #9aa3ab;
-  --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238; --faint: #737c84;
+  --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238; --faint: #737c84; --mark: rgba(143, 177, 242, 0.22);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --text: #e3e6e9; --link: #8fb1f2; } }
@@ -559,17 +560,17 @@ footer { align-items: baseline; }
 .marked-h { margin: 0; font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
 .marked-ad {
   font-family: var(--font-type); font-size: 0.9375rem; line-height: 1.75rem;
-  color: var(--ink); background: var(--paper); padding: var(--line) calc(var(--line) * 1.25);
+  color: var(--text); background: none;
+  border-left: 3px solid var(--rule); padding: 0 0 0 calc(var(--line) * 0.75);
   white-space: pre-wrap; overflow-wrap: anywhere;
-  box-shadow: 0 1px 0 var(--rule), 0 14px 30px -22px rgba(20, 30, 40, 0.45);
 }
-.marked-ad mark { background: none; color: inherit; text-decoration: underline wavy var(--pencil); text-decoration-thickness: 1px; text-underline-offset: 0.25em; text-decoration-skip-ink: none; }
-.marked-ad mark.hl { text-decoration: none; background: var(--pencil-soft); }
-.marked-ad mark::after { content: attr(data-g); font-family: var(--font-body); font-weight: 700; font-size: 0.75em; font-variant-numeric: lining-nums; color: var(--pencil); vertical-align: 0.6em; line-height: 0; margin-left: 0.15em; }
+.marked-ad mark { background: none; color: inherit; text-decoration: underline wavy var(--link); text-decoration-thickness: 1px; text-underline-offset: 0.25em; text-decoration-skip-ink: none; }
+.marked-ad mark.hl { text-decoration: none; background: var(--mark); }
+.marked-ad mark::after { content: attr(data-g); font-family: var(--font-body); font-weight: 700; font-size: 0.75em; font-variant-numeric: lining-nums; color: var(--link); vertical-align: 0.6em; line-height: 0; margin-left: 0.15em; }
 @media (max-width: 520px) {
   #ad-clear { margin-left: 0; }
   .results .head { flex-direction: column; align-items: flex-start; }
-  .marked-ad { padding: var(--half) var(--half) var(--line); }
+  .marked-ad { padding-left: var(--half); }
 }
 .marked-key { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
 </style>
@@ -691,7 +692,7 @@ The offer
       <ol class="results" id="ad-results" aria-live="polite"></ol>
       <div class="marked" id="ad-marked-wrap" hidden>
         <h3 class="marked-h">Your ad, marked up</h3>
-        <p class="marked-key">A wavy line is worth a look. Shading is noted, so you can check it’s right. The small number is the guideline.</p>
+        <p class="marked-key">A wavy line is worth a look. Shading is for you to check, because it may be fine in context. The small number is the guideline.</p>
         <div class="marked-ad" id="ad-marked"></div>
       </div>
     </div>
@@ -931,7 +932,7 @@ Limits to be honest about: most of this research is from North America and Europ
   </footer>
 </main>
 
-<script type="application/json" id="examples">[{"id": "before", "label": "A typical draft", "text": "Customer Success Manager\n\nSalary: £32k to £38k depending on experience\n\nAbout us\n\nWe're a fast-growing software company helping independent cafés manage bookings, stock and staff rotas. We're ambitious, and we're proud of our 4.8 rating on Trustpilot.\n\nWho we're looking for\n\nA confident, ambitious Customer Success Manager who will champion our customers and drive retention across a portfolio of 150 accounts. You'll be the decisive voice of the customer in product decisions.\n\nRequirements\n\n- 3+ years in customer success or account management\n- Experience with SaaS products\n- Experience with HubSpot and Zendesk\n- Excellent written and verbal communication\n- Strong analytical skills\n- Commercial awareness\n- Experience running onboarding and training sessions\n- Experience managing renewals and upsells\n- Confident presenting to senior stakeholders\n- Able to manage competing priorities\n- A degree in business or a related subject\n- Full UK driving licence\n\nThe offer\n\n- An attractive salary of £35k to £42k\n- 25 days' holiday plus bank holidays\n- Pension\n- Flexible working\n- Team socials every month"}, {"id": "sea-of-dudes", "label": "Sea of dudes", "text": "Senior Backend Engineer\n\nWe're a fast-growing, ambitious scale-up looking for a driven rockstar engineer to join our elite team. You'll lead the charge on our core platform, making decisive calls and defending your opinions in a competitive, high-energy environment.\n\nYou must have\n\n- 8+ years building distributed systems\n- Expert-level Go, Rust and Kotlin\n- Deep experience of Kubernetes, Kafka, Terraform and AWS\n- A computer science degree from a top university\n- A track record of leading teams and dominating the market\n- Independent, self-reliant, and confident under pressure\n- Strong analytical and logical thinking\n\nPerks\n\n- Beer fridge and ping-pong table\n- Work hard, play hard culture\n- Competitive salary"}, {"id": "balanced-but-not-fine", "label": "Warm but not fine", "text": "Office Coordinator\n\nWe're a warm, supportive and collaborative team, committed to understanding each other and working together. We're looking for a young, energetic recent graduate to join us.\n\nYou'll need\n\n- To be fit and active, as you'll be on your feet a lot\n- A full driving licence\n- To be a digital native, comfortable with all our systems\n- Confidence and independence\n- A competitive, determined attitude\n\nPay\n\nCompetitive, depending on experience.\n\nHe or she will report to our chairman."}, {"id": "after", "label": "The rewrite", "text": "Customer Success Manager\n\nAbout us\n\nWe help independent cafés manage bookings, stock and staff rotas. Most of our customers run small teams on tight margins, so the help we give them matters.\n\nSchool pick-ups, a parent to look after, a hospital appointment? We do too. Core hours are 10 to 3, and you fit the rest around your life.\n\nWhat you'll do\n\nYou'll look after about 150 cafés, from their first week with us to their renewal. You'll run onboarding and training, spot customers who are struggling before they tell us, and bring what you learn back to the product team.\n\nWhat matters most\n\n1. You care. In this job that means following up with a café owner when nobody asked you to, and noticing when a colleague is stuck.\n2. You've looked after customers of a software product before.\n3. You can explain something technical to someone who's busy and tired.\n\nNice to have\n\n- HubSpot or Zendesk\n- Running renewals\n- Experience in hospitality\n\nThe offer\n\n- 25 days' holiday plus bank holidays\n- Pension\n- A learning budget of £1,000 a year\n- Tell us what would help you at interview or at work, and we'll sort it"}]</script>
+<script type="application/json" id="examples">[{"id": "before", "label": "A typical draft", "text": "Customer Success Manager\n\nSalary: £32k to £38k depending on experience\n\nAbout us\n\nWe're a fast-growing software company helping independent cafés manage bookings, stock and staff rotas. We're ambitious, and we're proud of our 4.8 rating on Trustpilot.\n\nWho we're looking for\n\nA confident, ambitious Customer Success Manager who will champion our customers and drive retention across a portfolio of 150 accounts. You'll be the decisive voice of the customer in product decisions.\n\nRequirements\n\n- 3+ years in customer success or account management\n- Experience with SaaS products\n- Experience with HubSpot and Zendesk\n- Excellent written and verbal communication\n- Strong analytical skills\n- Commercial awareness\n- Experience running onboarding and training sessions\n- Experience managing renewals and upsells\n- Confident presenting to senior stakeholders\n- Able to manage competing priorities\n- A degree in business or a related subject\n- Full UK driving licence\n\nThe offer\n\n- An attractive salary of £35k to £42k\n- 25 days' holiday plus bank holidays\n- Pension\n- Flexible working\n- Team socials every month"}, {"id": "balanced-but-not-fine", "label": "Warm but not fine", "text": "Office Coordinator\n\nWe're a warm, supportive and collaborative team, committed to understanding each other and working together. We're looking for a young, energetic recent graduate to join us.\n\nYou'll need\n\n- To be fit and active, as you'll be on your feet a lot\n- A full driving licence\n- To be a digital native, comfortable with all our systems\n- Confidence and independence\n- A competitive, determined attitude\n\nPay\n\nCompetitive, depending on experience.\n\nHe or she will report to our chairman."}, {"id": "after", "label": "The rewrite", "text": "Customer Success Manager\n\nAbout us\n\nWe help independent cafés manage bookings, stock and staff rotas. Most of our customers run small teams on tight margins, so the help we give them matters.\n\nSchool pick-ups, a parent to look after, a hospital appointment? We do too. Core hours are 10 to 3, and you fit the rest around your life.\n\nWhat you'll do\n\nYou'll look after about 150 cafés, from their first week with us to their renewal. You'll run onboarding and training, spot customers who are struggling before they tell us, and bring what you learn back to the product team.\n\nWhat matters most\n\n1. You care. In this job that means following up with a café owner when nobody asked you to, and noticing when a colleague is stuck.\n2. You've looked after customers of a software product before.\n3. You can explain something technical to someone who's busy and tired.\n\nNice to have\n\n- HubSpot or Zendesk\n- Running renewals\n- Experience in hospitality\n\nThe offer\n\n- 25 days' holiday plus bank holidays\n- Pension\n- A learning budget of £1,000 a year\n- Tell us what would help you at interview or at work, and we'll sort it"}]</script>
 <script type="application/json" id="wordlists">{"communal": ["agree", "affectionate", "child", "cheer", "collab", "commit", "communal", "compassion", "connect", "considerate", "cooperat", "co-operat", "depend", "emotiona", "empath", "feel", "flatterable", "gentle", "honest", "interpersonal", "interdependen", "interpersona", "inter-personal", "inter-dependen", "inter-persona", "kind", "kinship", "loyal", "modesty", "nag", "nurtur", "pleasant", "polite", "quiet", "respon", "sensitiv", "submissive", "support", "sympath", "tender", "together", "trust", "understand", "warm", "whin", "enthusias", "inclusive", "yield", "share", "sharin"], "agentic": ["active", "adventurous", "aggress", "ambitio", "analy", "assert", "athlet", "autonom", "battle", "boast", "challeng", "champion", "compet", "confident", "courag", "decid", "decision", "decisive", "defend", "determin", "domina", "dominant", "driven", "fearless", "fight", "force", "greedy", "head-strong", "headstrong", "hierarch", "hostil", "impulsive", "independen", "individual", "intellect", "lead", "logic", "objective", "opinion", "outspoken", "persist", "principle", "reckless", "self-confiden", "self-relian", "self-sufficien", "selfconfiden", "selfrelian", "selfsufficien", "stubborn", "superior", "unreasonab"], "nonCoded": ["sharepoint"], "fixed": "competitive (?:salary|pay|package|rates?|benefits|remuneration|pension)|compet(?:ence|ent|encies|ency)\\w*|competing priorities|\\bcompetitors?\\b|competitor (?:landscape|analysis)|(?:customer|technical|it|tech|product|user|client|desktop) support|support (?:team|desk|engineer|analyst|agent|role|tickets?|requests?)|lead generation|\\bleads\\b|\\bteam lead\\b|\\btech lead\\b|(?:market|industry|sector)[- ]leading|leading (?:provider|supplier|brand)|active directory|\\banalytics\\b|\\banalysts?\\b|data analy\\w*|(?:business|product|team|company|key) objectives|(?:design|engineering|product) principles|trustpilot|foundation trust|\\bnhs trust|responsibilit\\w*|responsible for|\\brespond\\w*|depend(?:ing|ent) on|\\bdependenc\\w*|share options?|share scheme|market share|child ?care|tender(?:ing)? (?:process|bid)\\w*|\\btendering\\b|feel free|decision[- ]?making|\\bcommitted to\\b|individual contributor|\\bindividuals\\b|\\bdecisions\\b|\\bobjectives\\b|understanding of|independent (?:caf\\w*|shops?|retailers?|businesses|schools?|stores?|restaurants?|living|review\\w*)|(?:salary|pay|package)\\W+competitive|competitive\\W+(?:depending|doe)\\w*", "pay": "[£$€]\\s?\\d[\\d,]*(?:\\.\\d+)?\\s?[kK]?(?:\\s?(?:-|–|—|to)\\s?[£$€]?\\s?\\d[\\d,]*(?:\\.\\d+)?\\s?[kK]?)?|\\b\\d{2,3}\\s?[kK]\\s?(?:-|–|—|to)\\s?\\d{2,3}\\s?[kK]\\b", "payWords": "competitive (?:salary|pay|package)|\\bnegotiable\\b|\\bDOE\\b|depending on experience|\\bsalary\\b|per annum|\\bpro rata\\b|\\bOTE\\b"}</script>
 <script>
 /*CHECKER*/
@@ -1088,14 +1089,20 @@ function makeChecker(L) {
     // 6 Describe the job, not the person (Kat Matfield's word lists)
     var a = hits(lines, L.agentic), c = hits(lines, L.communal);
     var aKept = a.filter(function (h) { return !h.fixed; }), cKept = c.filter(function (h) { return !h.fixed; });
-    aKept.forEach(function (h) { mark(h.line, h.start, h.end, 6, 'trait'); });
+    // A word already marked for another guideline ("fit and active") isn't listed again as a trait.
+    var traits = aKept.filter(function (h) { return !marks.some(function (m) { return m.line === h.line && m.start <= h.start && h.end <= m.end; }); });
+    traits.forEach(function (h) { mark(h.line, h.start, h.end, 6, 'trait'); });
     var set = uniq(a.concat(c).filter(function (h) { return h.fixed; }).map(function (h) { return h.fixed; }));
     var gend = uniq(scan(R.gendered, 6, 'gendered'));
     var p6 = [];
     if (gend.length) p6.push('Gendered wording: ' + q(gend) + '. Use “you”, “they” or the role name.');
-    if (aKept.length) p6.push('Trait words: ' + q(uniq(aKept.map(function (h) { return h.word; }))) + '. Keep only the ones the job needs.');
+    // A word list can't tell the job from the person, so trait words alone need a person to judge.
+    var tw = uniq(traits.map(function (h) { return h.word; }));
+    var tn = tw.length ? 'From the trait word lists: ' + q(tw.slice(0, 6)) + (tw.length > 6 ? ' and ' + (tw.length - 6) + ' more' : '') + '. Some may describe the job, not the person: “lead a team of four” is the job, “a natural leader” is a trait. Keep the ones the job needs.' : '';
     var wc = aKept.length + ' agentic and ' + cKept.length + ' communal trait words' + (set.length ? ', after setting aside ' + q(set.slice(0, 4)) + (set.length > 4 ? ' and others' : '') + ' as fixed terms' : '') + '.';
-    res.push(p6.length ? ['look', p6.join(' '), wc] : ['ok', 'No gendered wording or agentic trait words found.', wc]);
+    if (p6.length) res.push(['look', p6.concat(tn ? [tn] : []).join(' '), wc]);
+    else if (tn) res.push(['read', tn, wc]);
+    else res.push(['ok', 'No gendered wording or agentic trait words found.', wc]);
 
     // 7 Show, don't claim
     var hype = uniq(scan(R.hype, 7, 'hype'));
@@ -1144,7 +1151,7 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
       var out = '', pos = 0;
       ms.forEach(function (m) {
         if (m.start < pos) return;
-        var note = m.why === 'pay' || m.why === 'flex' || m.why === 'years';
+        var note = m.why === 'pay' || m.why === 'flex' || m.why === 'years' || m.why === 'trait';
         out += esc(line.slice(pos, m.start)) + '<mark class="' + (note ? 'hl' : 'flag') + '" data-g="' + m.g + '">' + esc(line.slice(m.start, m.end)) + '</mark>';
         pos = m.end;
       });
