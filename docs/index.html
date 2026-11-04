@@ -410,8 +410,12 @@ footer {
 .play .ad .caret { animation: appear 0.2s var(--d, 0s) both; }
 .play .wordcheck .after { animation: appear 0.5s 8.4s both; }
 .play .note { animation: stick 0.7s cubic-bezier(.2,.8,.3,1) 8.9s both; }
-.play.waiting .ad del, .play.waiting .ad ins, .play.waiting .ad .caret,
+/* On load only the first strike runs; the rest wait for the first scroll, then follow on a second sooner. */
+.play.waiting .ad .line:not(:first-child) del, .play.waiting .ad ins, .play.waiting .ad .caret,
 .play.waiting .wordcheck .after, .play.waiting .note { animation-play-state: paused; }
+.play.resumed .ad .line:not(:first-child) del, .play.resumed .ad ins, .play.resumed .ad .caret { animation-delay: calc(var(--d, 0s) - 1s); }
+.play.resumed .wordcheck .after { animation-delay: 7.4s; }
+.play.resumed .note { animation-delay: 7.9s; }
 .replay-row { margin: 0.9rem 0 0; font-family: var(--font-type); font-size: 0.82rem; }
 .replay {
   font: inherit;
@@ -543,7 +547,7 @@ footer {
   var paper = document.querySelector('.paper');
   if (!paper || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   function play() {
-    paper.classList.remove('play', 'waiting');
+    paper.classList.remove('play', 'waiting', 'resumed');
     void paper.offsetWidth;
     paper.classList.add('play');
   }
@@ -553,6 +557,7 @@ footer {
   function go() {
     events.forEach(function (e) { window.removeEventListener(e, go); });
     clearTimeout(fallback);
+    paper.classList.add('resumed');
     paper.classList.remove('waiting');
   }
   events.forEach(function (e) { window.addEventListener(e, go, { passive: true }); });
