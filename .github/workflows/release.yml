@@ -14,7 +14,7 @@ jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0, pinned to a commit
       - name: Build the zip
         # git archive packs only tracked files, with the skill folder at the root
         run: git archive --format=zip --output inclusive-job-ads.zip "$GITHUB_REF_NAME" inclusive-job-ads

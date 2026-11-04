@@ -35,7 +35,23 @@ head='''<!doctype html>
 <meta property="og:url" content="https://inclusive-job-ads.beaks.co/">
 <meta name="twitter:card" content="summary_large_image">
 '''
-out=page(s, head)
+import base64, hashlib
+def csp(html):
+    """Add a Content-Security-Policy that allows only this page's own inline scripts (by hash),
+    Google Fonts and Cloudflare Web Analytics."""
+    hashes = []
+    for m in re.finditer(r'<script(?![^>]*\b(?:src|type="application/json")\b)[^>]*>(.*?)</script>', html, re.S):
+        hashes.append("'sha256-" + base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode() + "'")
+    policy = ("default-src 'none'; "
+              "script-src " + " ".join(hashes) + " https://static.cloudflareinsights.com; "
+              "style-src 'unsafe-inline' https://fonts.googleapis.com; "
+              "font-src https://fonts.gstatic.com; img-src 'self' data:; "
+              "connect-src https://cloudflareinsights.com; "
+              "base-uri 'none'; form-action 'none'")
+    meta = '<meta http-equiv="Content-Security-Policy" content="' + policy + '">\n<meta name="referrer" content="strict-origin-when-cross-origin">\n'
+    return html.replace('<meta name="viewport"', meta + '<meta name="viewport"', 1)
+
+out=csp(page(s, head))
 open(dst,'w').write(out)
 chead=(head.replace('content="Guidelines for writing and reviewing job ads that welcome everyone who could do the job, with tools for Claude, ChatGPT, Gemini and Copilot. Free and open source."','content="Paste a job ad and check it against seven evidence-based guidelines. It runs in your browser, so your ad isn’t sent anywhere."')
   .replace('<meta property="og:title" content="inclusive-job-ads">','<meta property="og:title" content="Check a job ad">')
@@ -44,7 +60,7 @@ chead=(head.replace('content="Guidelines for writing and reviewing job ads that 
 assert chead.count('check/')==1 and 'Check a job ad' in chead
 cdst=os.path.join(os.path.dirname(dst), 'check', 'index.html')
 os.makedirs(os.path.dirname(cdst), exist_ok=True)
-open(cdst,'w').write(page(chk, chead))
+open(cdst,'w').write(csp(page(chk, chead)))
 st=re.sub(r'<script>.*?</script>','',out,flags=re.S).replace('<html lang="en-GB">','<html lang="en-GB" data-theme="dark">')
 st=st.replace('</style>','''.site-head, .lede-block, .sec, footer, .replay-row { display: none !important; }
 html, body { height: 100%; }
