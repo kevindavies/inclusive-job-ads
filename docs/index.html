@@ -291,6 +291,22 @@ body {
 .checks .tag { font-size: 0.75rem; letter-spacing: 0.02em; color: var(--muted); white-space: nowrap; }
 .small { font-size: 0.875rem !important; color: var(--muted); }
 
+.download {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fff;
+  background: var(--pencil);
+  text-decoration: none;
+  padding: 0.6em 1.1em;
+  border-radius: 3px;
+}
+.download:hover { background: #1c4699; }
+.download:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; }
+.steps { margin: 0; padding-left: 1.2em; font-size: 1rem; display: grid; gap: 0.4em; }
+.steps li { padding-left: 0.2em; text-wrap: pretty; }
+.steps li::marker { color: var(--muted); font-variant-numeric: tabular-nums; }
+
 /* Install: commands wrap with a hanging indent, so a continuation reads as one command */
 .code { position: relative; }
 pre {
@@ -448,13 +464,14 @@ footer {
       <p class="small">Strongest evidence first.</p>
     </div>
     <div>
-      <h2>Install</h2>
-      <div class="code">
-        <pre><code><span class="cmd">git clone <span class="nw">https://github.com/</span><wbr><span class="nw">kevindavies/</span><wbr><span class="nw">inclusive-job-ads.git</span></span><span class="cmd">cp -r <span class="nw">inclusive-job-ads/</span><wbr><span class="nw">inclusive-job-ads</span> <span class="nw">~/.claude/skills/</span></span></code></pre>
-        <button type="button" class="copy" hidden>Copy</button>
-      </div>
-      <p>Then ask Claude to write a job ad, or paste one and ask for a review.</p>
-      <p class="small">For Claude.ai, the desktop app, Gemini CLI, GitHub Copilot or Codex, see <a href="https://github.com/kevindavies/inclusive-job-ads#install">the install notes</a>.</p>
+      <h2>Use it in Claude</h2>
+      <p><a class="download" href="https://github.com/kevindavies/inclusive-job-ads/releases/latest/download/inclusive-job-ads.zip">Download the skill</a></p>
+      <ol class="steps">
+        <li>In Claude, open Customize, then Skills.</li>
+        <li>Click +, then Create skill, then Upload a skill, and choose the zip. No need to unzip it.</li>
+        <li>Ask Claude to help you write a job ad, or paste one and ask for a review.</li>
+      </ol>
+      <p class="small">Skills need code execution, under Settings &gt; Capabilities. On a company plan, ask whoever runs your Claude account. ChatGPT and the Gemini app take the same file, though we haven’t tested them yet. Developers, see the <a href="https://github.com/kevindavies/inclusive-job-ads#for-developers">command-line install</a>.</p>
     </div>
     <div>
       <h2>For any size of employer</h2>

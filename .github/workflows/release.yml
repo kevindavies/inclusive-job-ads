@@ -1,0 +1,29 @@
+# On every version tag, attach the skill as a ready-to-upload zip to its
+# GitHub release. The site and README link to releases/latest/download/,
+# so the download is always the newest tagged version.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the zip
+        # git archive packs only tracked files, with the skill folder at the root
+        run: git archive --format=zip --output inclusive-job-ads.zip "$GITHUB_REF_NAME" inclusive-job-ads
+      - name: Attach it to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" inclusive-job-ads.zip --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" inclusive-job-ads.zip --title "$GITHUB_REF_NAME" --generate-notes
+          fi
