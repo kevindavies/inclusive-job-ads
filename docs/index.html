@@ -229,17 +229,31 @@ body {
 .label h1 { font: inherit; font-weight: 700; color: var(--text); margin: 0; }
 .label span::before { content: "\00b7"; margin-right: var(--u); }
 .lede {
-  grid-column: 1 / span 9;
+  max-width: 14em;
   font-family: var(--font-display);
   font-weight: 350;
   font-size: clamp(1.9rem, 4.6vw, 3.1rem);
   line-height: 1.1;
   letter-spacing: -0.015em;
   font-optical-sizing: auto;
-  text-wrap: balance;
-  margin: 0 0 var(--u);
+  text-wrap: pretty;
+  margin: 0;
 }
 .lede em { font-style: italic; font-weight: 300; }
+.lede .typed { white-space: nowrap; }
+.lede .typed.selected { background: var(--pencil-soft); box-shadow: 0 0 0 0.04em var(--pencil-soft); }
+.lede .tcaret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.9em;
+  margin-left: 0.04em;
+  vertical-align: -0.08em;
+  background: var(--pencil);
+  animation: blink 1s steps(1) infinite;
+}
+.lede .tcaret[hidden] { display: none; }
+@keyframes blink { 50% { opacity: 0; } }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .support {
   grid-column: span 6;
   margin: 0;
@@ -396,6 +410,8 @@ footer {
 .play .ad .caret { animation: appear 0.2s var(--d, 0s) both; }
 .play .wordcheck .after { animation: appear 0.5s 8.4s both; }
 .play .note { animation: stick 0.7s cubic-bezier(.2,.8,.3,1) 8.9s both; }
+.play.waiting .ad del, .play.waiting .ad ins, .play.waiting .ad .caret,
+.play.waiting .wordcheck .after, .play.waiting .note { animation-play-state: paused; }
 .replay-row { margin: 0.9rem 0 0; font-family: var(--font-type); font-size: 0.82rem; }
 .replay {
   font: inherit;
@@ -420,6 +436,8 @@ footer {
     <div class="label"><h1>inclusive-job-ads</h1><span>Claude skill</span><span>MIT licence</span></div>
     <a class="repo-link" href="https://github.com/kevindavies/inclusive-job-ads">GitHub<span aria-hidden="true">&#8599;</span></a>
   </header>
+  <p class="lede">A Claude skill that helps write job ads, and reviews them the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would.</p>
+
   <section class="proof-row" aria-label="A job spec, kindly edited">
     <article class="paper">
       <div class="slug" aria-hidden="true"><span>Job spec, draft 2</span><span>Edits in blue</span></div>
@@ -444,7 +462,6 @@ footer {
   </section>
 
   <section class="intro">
-    <p class="lede">A Claude skill that helps write job ads, and reviews them the way a <em>colleague</em> would.</p>
     <p class="support">An ad rarely says “you can’t do this”. Too often it says “you won’t fit in”. The skill finds those lines, and the ones that tell people they’d belong, then suggests specific fixes.</p>
     <p class="support">Every check is grounded in published research, and says how strong that research is. It’s built to support inclusive hiring practices like those used in B Lab’s standards for B Corps. It’s free and open source.</p>
   </section>
@@ -500,14 +517,47 @@ footer {
   });
 })();
 (function () {
+  // The lede's adjective gets retyped: backspaced, retyped, then selected and replaced.
+  var typed = document.querySelector('.lede .typed');
+  var caret = document.querySelector('.lede .tcaret');
+  if (!typed || !caret || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var steps = [], t = 700;
+  function at(ms, fn) { t += ms; steps.push([t, fn]); }
+  function set(text) { return function () { typed.textContent = text; }; }
+  function backspace(word, ms) { for (var i = word.length - 1; i >= 2; i--) at(ms, set(word.slice(0, i))); at(ms, set('')); }
+  function type(word, ms) { for (var i = 1; i <= word.length; i++) at(ms + (i % 3) * 18, set(word.slice(0, i))); }
+  typed.textContent = 'a switched-on';
+  caret.hidden = false;
+  at(1100, function () {});
+  backspace('a switched-on', 45);
+  at(250, function () {});
+  type('an astute', 70);
+  at(1100, function () { typed.classList.add('selected'); caret.hidden = true; });
+  at(450, function () { typed.classList.remove('selected'); typed.textContent = ''; caret.hidden = false; });
+  at(250, function () {});
+  type('a helpful', 70);
+  at(2600, function () { caret.hidden = true; });
+  steps.forEach(function (s) { setTimeout(s[1], s[0]); });
+})();
+(function () {
   var paper = document.querySelector('.paper');
   if (!paper || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   function play() {
-    paper.classList.remove('play');
+    paper.classList.remove('play', 'waiting');
     void paper.offsetWidth;
     paper.classList.add('play');
   }
-  play();
+  // Show the clean draft, and start the edits when the reader starts scrolling.
+  paper.classList.add('play', 'waiting');
+  var events = ['scroll', 'wheel', 'touchmove', 'keydown'];
+  function go() {
+    events.forEach(function (e) { window.removeEventListener(e, go); });
+    clearTimeout(fallback);
+    paper.classList.remove('waiting');
+  }
+  events.forEach(function (e) { window.addEventListener(e, go, { passive: true }); });
+  // A screen tall enough not to scroll still gets the edits, a little later.
+  var fallback = setTimeout(go, 9000);
   var btn = document.getElementById('replay');
   if (btn) btn.addEventListener('click', play);
 })();
