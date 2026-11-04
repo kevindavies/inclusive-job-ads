@@ -202,6 +202,14 @@ record you can keep. It's independent of B Lab and doesn't certify anything.
 - The other studies are listed in
   [`references/evidence.md`](inclusive-job-ads/references/evidence.md).
 
+## Feedback
+
+Used it? [Email inclusive-job-ads@beaks.co](mailto:inclusive-job-ads@beaks.co?subject=inclusive-job-ads%3A%20how%20it%20went&body=Which%20tool%20did%20you%20use%20%28Claude%2C%20ChatGPT%2C%20Gemini%2C%20Copilot%20or%20something%20else%29%3F%0A%0A%0AWhat%20worked%3F%0A%0A%0AWhat%20felt%20off%3F%0A%0A%0A%28Please%20only%20include%20ad%20text%20if%20the%20ad%20is%20already%20public.%29%0A) and say which tool you used,
+what worked and what felt off. Please only include ad text if the ad is
+already public. If you're on GitHub,
+[an issue](https://github.com/kevindavies/inclusive-job-ads/issues/new?template=tested-in.md)
+works too.
+
 ## Security
 
 The skill treats the ad as data, never as instructions, and its script reads
