@@ -30,6 +30,11 @@ function makeChecker(L) {
   var FIXED = new RegExp(L.fixed.replace(/\\w/g, '[\\p{L}\\p{N}_]'), 'giu');
   var PAY = new RegExp(L.pay, 'g');
   var PAYW = new RegExp(L.payWords, 'i');
+  // Same rules as decode.py: a rate after a small amount makes it pay ("£12.50 per hour"),
+  // and money that belongs to the job ("a £50k budget") isn't pay.
+  var RATE = new RegExp(L.rate, 'iy'), NOTPAY_B = new RegExp(L.notPayBefore, 'i'), NOTPAY_A = new RegExp(L.notPayAfter, 'iy');
+  function at(re, line, i) { re.lastIndex = i; return re.test(line); }
+  function notPay(line, s, e) { return NOTPAY_B.test(line.slice(Math.max(0, s - 40), s)) || at(NOTPAY_A, line, e); }
 
   function hits(lines, stems) {
     var found = [];
@@ -86,7 +91,7 @@ function makeChecker(L) {
     // 1 Pay
     var figs = {}, competitive = false;
     lines.forEach(function (l, n) {
-      all(PAY, l).forEach(function (h) { if (salaryLike(h[2])) { figs[canonical(h[2])] = figs[canonical(h[2])] || h[2].trim(); mark(n, h[0], h[1], 1, 'pay'); } });
+      all(PAY, l).forEach(function (h) { if (!notPay(l, h[0], h[1]) && (salaryLike(h[2]) || at(RATE, l, h[1]))) { figs[canonical(h[2])] = figs[canonical(h[2])] || h[2].trim(); mark(n, h[0], h[1], 1, 'pay'); } });
       if (/competitive (?:salary|pay|package)/i.test(l)) competitive = true;
     });
     var f = Object.keys(figs).map(function (k) { return figs[k]; });
