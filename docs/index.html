@@ -437,6 +437,10 @@ footer {
   .wordcheck { order: 2; }
   .replay-row { order: 3; }
   .wrap { gap: calc(var(--u) * 3.5); }
+  /* Size the typewriter text so the longest edited line, "You're a competitive self-starter.", fits on one line */
+  .ad { font-size: min(1.15rem, calc((100vw - 5.5rem) / 20.8)); }
+  /* Until the reader scrolls, don't hold an empty space where the post-it will land */
+  .play.waiting .note { display: none; }
   .cols { grid-template-columns: minmax(0, 1fr); grid-template-areas: "checks" "use" "more"; grid-template-rows: auto; }
   .intro { grid-template-columns: minmax(0, 1fr); }
   .lede, .support, .support:first-of-type { grid-column: 1 / -1; }
@@ -444,6 +448,7 @@ footer {
 }
 
 @media (max-width: 520px) { .site-head .label span:last-child { display: none; } }
+@media (max-width: 380px) { .site-head .label span { display: none; } }
 
 .note p:not(.sig) { text-wrap: pretty; }
 
@@ -509,7 +514,7 @@ footer {
         <span class="line">to <span class="edit" data-new="help small shops grow"><del style="--d:1.5s">dominate the market</del><ins style="--d:2.1s">help small shops grow</ins></span>.</span>
         <span class="line">You're <span class="edit" data-new="someone who cares"><del style="--d:3.2s">a competitive self-starter</del><ins style="--d:3.9s">someone who cares</ins></span>.</span>
         <span class="line"><span class="edit" data-new="£65,000 to £80,000"><del style="--d:5s">Competitive salary</del><ins style="--d:5.6s">£65,000 to £80,000</ins></span>.</span>
-        <span class="line"><span class="edit add"><span class="caret" aria-hidden="true" style="--d:6.6s">&#8248;</span><ins style="--d:6.8s; --w:1.4s">Need to duck out for school <span style="white-space: nowrap">pick-ups?</span> We do too.</ins></span></span>
+        <span class="line"><span class="edit add"><span class="caret" aria-hidden="true" style="--d:6.6s">&#8248;</span><ins style="--d:6.8s; --w:1.4s">Need to duck out for school <span style="white-space: nowrap">pick-ups?</span> We do&nbsp;too.</ins></span></span>
       </p>
       <dl class="wordcheck">
         <dt>Before</dt><dd>strongly masculine-coded, no salary</dd>
