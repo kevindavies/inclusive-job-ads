@@ -111,17 +111,49 @@ The reviews and the written ad were produced by Claude following the skill, with
 
 ## Install
 
-Copy the `inclusive-job-ads` folder into your skills directory:
+### Claude Code
 
 ```bash
 git clone https://github.com/kevindavies/inclusive-job-ads.git
 cp -r inclusive-job-ads/inclusive-job-ads ~/.claude/skills/
 ```
 
-In Claude.ai, zip the `inclusive-job-ads` folder and upload it under
-Settings > Capabilities > Skills.
+### Claude.ai and the Claude desktop app
 
-Then ask Claude to write a job ad, or paste one and ask it to review it.
+1. Zip the inner `inclusive-job-ads` folder, the one with `SKILL.md` in it.
+2. Go to Customize > Skills, click +, then Create skill > Upload a skill, and
+   choose the zip.
+3. Make sure code execution is on, under Settings > Capabilities. On a Team
+   or Enterprise plan, an owner turns it on for the organisation. Without
+   it, the skill shows greyed out.
+
+See [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude)
+if the menus have moved.
+
+### Gemini CLI, GitHub Copilot and OpenAI Codex
+
+All three read the same `SKILL.md` format, and all three look in
+`~/.agents/skills/`:
+
+```bash
+git clone https://github.com/kevindavies/inclusive-job-ads.git
+mkdir -p ~/.agents/skills
+cp -r inclusive-job-ads/inclusive-job-ads ~/.agents/skills/
+```
+
+Each also has its own folder if you prefer:
+[`~/.gemini/skills/`](https://geminicli.com/docs/cli/skills/),
+[`~/.copilot/skills/`](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+or a repo's `.agents/skills/` for
+[Codex](https://learn.chatgpt.com/docs/build-skills).
+
+The skill was built and tested with Claude. The others should work, but
+haven't been tested yet. The word-count script needs an agent that can run
+Python; without it, the skill says so and does the reading checks only.
+
+### Then
+
+Ask for a job ad, or paste one and ask for a review.
 
 ## Run the script on its own
 
@@ -152,6 +184,7 @@ record you can keep. It's independent of B Lab and doesn't certify anything.
   in the US.
 - The word lists are English only.
 - A welcoming ad for a badly defined job is still a bad ad.
+- This isn't designed to make a bad job sound good.
 - Tools catch words. People catch what the words imply. Ask someone who'd
   read it differently from you.
 
