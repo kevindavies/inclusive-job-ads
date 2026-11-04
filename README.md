@@ -6,6 +6,9 @@ tells some of them "you won't fit in", then suggests specific, kind fixes.
 
 See it in action: https://inclusive-job-ads.beaks.co/
 
+Check an ad in your browser, no AI or sign-up needed:
+https://inclusive-job-ads.beaks.co/check/
+
 Download it for Claude: [inclusive-job-ads.zip](https://github.com/kevindavies/inclusive-job-ads/releases/latest/download/inclusive-job-ads.zip), then see
 [Install](#install).
 
@@ -206,8 +209,8 @@ record you can keep. It's independent of B Lab and doesn't certify anything.
 ## Credits
 
 - Kat Matfield, [Gender Decoder](https://github.com/lovedaybrooke/gender-decoder).
-  The word lists and thresholds are hers, used under the MIT licence. See
-  [NOTICE](NOTICE). This script counts each word once, so a few totals differ
+  The word lists and thresholds are hers, used under the MIT licence, in the
+  skill and in the site's checker. See [NOTICE](NOTICE). This script counts each word once, so a few totals differ
   slightly from hers.
 - Danielle Gaucher, Justin Friesen and Aaron C. Kay (2011), "Evidence that
   gendered wording in job advertisements exists and sustains gender
@@ -223,6 +226,18 @@ what worked and what felt off. Please only include ad text if the ad is
 already public. If you're on GitHub,
 [an issue](https://github.com/kevindavies/inclusive-job-ads/issues/new?template=tested-in.md)
 works too.
+
+## The website
+
+The site in `docs/` is built from `site/page.html`. The checker on
+`/check/` runs in the browser and uses the same word lists and context rules
+as `decode.py`, copied in at build time, plus simple pattern checks for the
+other guidelines. Its example ads come from `examples/`.
+
+```bash
+python3 site/build.py site/page.html docs/index.html /tmp/still.html
+node site/checker/parity.js   # browser and Python counts must match
+```
 
 ## Security
 
