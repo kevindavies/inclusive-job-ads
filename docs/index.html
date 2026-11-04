@@ -23,6 +23,7 @@
   --pencil: #2456b8;
   --pencil-soft: rgba(36, 86, 184, 0.12);
   --rule: #cfd5db;
+  --faint: #7b838b;
   --postit: #fdf7c4;
   --font-type: "Courier Prime", "Courier New", ui-monospace, monospace;
   --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
@@ -39,13 +40,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --desk: #15191d; --paper: #ecebe5; --ink: #1d2125; --muted: #9aa3ab;
-    --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238;
+    --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238; --faint: #737c84;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --desk: #15191d; --paper: #ecebe5; --ink: #1d2125; --muted: #9aa3ab;
-  --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238;
+  --pencil: #2456b8; --pencil-soft: rgba(36, 86, 184, 0.14); --rule: #2b3238; --faint: #737c84;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --text: #e3e6e9; --link: #8fb1f2; } }
@@ -451,6 +452,10 @@ footer {
 .lede-block { row-gap: var(--line); }
 .lede-block .lede { grid-column: 1 / span 10; }
 .lede-sub { grid-column: 1 / span 7; margin: 0; font-size: 1.25rem; line-height: var(--line); color: var(--text); text-wrap: pretty; }
+.lede-links { grid-column: 1 / -1; margin: calc(var(--line) * -0.5) 0 0; display: flex; flex-wrap: wrap; gap: 0 var(--half); font-size: 1.0625rem; font-weight: 500; }
+.lede-links span { color: var(--faint); }
+.lede-links a { white-space: nowrap; }
+@media (max-width: 520px) { .lede-links { flex-direction: column; gap: var(--half); } .lede-links span { display: none; } }
 .lede-sub .typed { font-family: var(--font-display); font-size: 1.1em; }
 
 .sec { border-top: 1px solid var(--rule); padding-top: calc(var(--half) - 1px); row-gap: var(--half); align-items: baseline; }
@@ -467,7 +472,8 @@ footer {
 }
 .sidenote { margin: 0; max-width: 20rem; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); text-wrap: pretty; }
 .sidenote + .sidenote { margin-top: calc(var(--half) * -0.5); }
-.standfirst { margin: 0; max-width: 34rem; font-family: var(--font-display); font-weight: 350; font-size: 1.625rem; line-height: 2.25rem; text-wrap: pretty; }
+.guide-wrap { display: grid; gap: calc(var(--line) * 1.5); }
+.standfirst { margin: 0; font-family: var(--font-display); font-weight: 350; font-size: clamp(1.625rem, 2.6vw, 2.125rem); line-height: 1.3; text-wrap: pretty; }
 
 /* The guidelines: numbers hang in the gutter so the headings share one left edge */
 .rules { list-style: none; margin: 0; padding: 0; counter-reset: rule; display: grid; gap: var(--line); }
@@ -486,7 +492,7 @@ footer {
 }
 .rule-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; column-gap: var(--line); }
 .rules h3 { margin: 0; font-family: var(--font-display); font-weight: 450; font-size: 1.25rem; line-height: var(--line); text-wrap: balance; }
-.tag { font-size: 0.75rem; line-height: 1.25rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.tag { font-size: 0.6875rem; line-height: 1.25rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
 .rules p { margin: 0; text-wrap: pretty; }
 .sources { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
 
@@ -532,7 +538,8 @@ footer { align-items: baseline; }
   </header>
   <div class="lede-block grid12">
   <p class="lede">Guidelines for writing and reviewing job ads that welcome everyone who could do the job.</p>
-  <p class="lede-sub">They also come as tools for AI assistants like Claude, ChatGPT, Gemini and Copilot, and for the AI built into applicant tracking systems. Then your AI gives feedback the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would. <a href="#use" style="white-space: nowrap">Use them with AI</a></p>
+  <p class="lede-sub">They also come as tools for AI assistants like Claude, ChatGPT, Gemini and Copilot, and for the AI built into applicant tracking systems. Then your AI gives feedback the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would.</p>
+  <p class="lede-links"><a href="#guidelines">Read the guidelines</a><span aria-hidden="true">•</span><a href="#use">Use them with your AI tools</a></p>
   </div>
 
   <section class="proof-row" aria-label="A job spec, kindly edited">
@@ -558,13 +565,14 @@ footer { align-items: baseline; }
     </article>
   </section>
 
-  <section class="sec grid12" aria-labelledby="h-guide">
+  <section class="guide-wrap" id="guidelines" aria-labelledby="h-guide">
+  <p class="standfirst">An ad rarely says “you can’t do this”. Too often it says “you won’t fit in”. These guidelines help you find those lines, and write the ones that tell people they’d belong.</p>
+  <div class="sec grid12">
     <div class="sec-label">
       <h2 id="h-guide">The guidelines</h2>
       <p class="sidenote">Seven of them, strongest evidence first. Each one says how strong its research is.</p>
     </div>
     <div class="sec-body">
-      <p class="standfirst">An ad rarely says “you can’t do this”. Too often it says “you won’t fit in”. These guidelines help you find those lines, and write the ones that tell people they’d belong.</p>
       <ol class="rules">
         <li><div class="rule-head"><h3>State the pay</h3><span class="tag">field evidence</span></div><p>Give a figure or a range, and say whether it’s negotiable. “Competitive salary” with no figure counts as missing. Unclear pay favours whoever feels entitled to ask.</p></li>
         <li><div class="rule-head"><h3>Say how flexible it is</h3><span class="tag">field evidence</span></div><p>Hours, location and how people really work, near the top. Not a line at the bottom of the perks.</p></li>
@@ -576,6 +584,7 @@ footer { align-items: baseline; }
       </ol>
       <p class="sources">Every source is <a href="https://github.com/kevindavies/inclusive-job-ads/blob/main/inclusive-job-ads/references/evidence.md">listed in the repo</a>, checked against the published papers.</p>
     </div>
+  </div>
   </section>
 
   <section class="sec grid12" id="use" aria-labelledby="h-use">
@@ -586,12 +595,30 @@ footer { align-items: baseline; }
     </div>
     <div class="sec-body use">
       <div class="tabs" role="tablist" aria-label="Choose your AI tool" hidden>
-        <button type="button" role="tab" id="tab-claude" aria-controls="use-claude" aria-selected="true">Claude</button>
+        <button type="button" role="tab" id="tab-ats" aria-controls="use-ats" aria-selected="true">Your ATS</button>
+        <button type="button" role="tab" id="tab-claude" aria-controls="use-claude" aria-selected="false" tabindex="-1">Claude</button>
         <button type="button" role="tab" id="tab-chatgpt" aria-controls="use-chatgpt" aria-selected="false" tabindex="-1">ChatGPT</button>
         <button type="button" role="tab" id="tab-gemini" aria-controls="use-gemini" aria-selected="false" tabindex="-1">Gemini</button>
         <button type="button" role="tab" id="tab-copilot" aria-controls="use-copilot" aria-selected="false" tabindex="-1">Copilot</button>
-        <button type="button" role="tab" id="tab-ats" aria-controls="use-ats" aria-selected="false" tabindex="-1">Your ATS</button>
       </div>
+      <section class="panel" id="use-ats" role="tabpanel" aria-labelledby="tab-ats">
+        <h3>Your applicant tracking system</h3>
+        <ol class="steps">
+          <li>Find where your ATS lets you guide its AI writer, often a “guidelines”, “tone” or “instructions” box.</li>
+          <li>Paste in the short prompt below. It’s under 1,000 characters, and it’s about writing ads, not reviewing them.</li>
+          <li>Generate an ad as usual.</li>
+        </ol>
+        <div class="code prompt-box"><pre class="prompt" data-prompt="short" tabindex="0" aria-label="The short prompt for an applicant tracking system">Write job ads that welcome everyone who could do the job.
+- State pay as a range, and say whether it's negotiable. Never write "competitive salary" without a figure.
+- Put flexibility near the top, and be specific about hours, location and how people really work.
+- Describe the job, not the person. Use behaviours, not traits: "you set your own goals and see them through", not "a driven self-starter".
+- List three to five essentials. Put the rest under "nice to have". Swap years of experience for what those years should prove.
+- Avoid wording that signals age ("young", "recent graduate"), gendered terms ("he/she", "salesman", "guys") and hype ("rockstar", "ninja", "work hard, play hard").
+- Don't add physical requirements the job doesn't need. Offer adjustments for applying and interviewing.
+- Show what working here is like, rather than claiming values.
+- Never invent pay, benefits or requirements. Leave a [placeholder] instead.</pre><button type="button" class="copy" hidden>Copy the prompt</button></div>
+        <p class="small">If your ATS has no such box, use one of the other tabs to write or review the ad, then paste it in.</p>
+      </section>
       <section class="panel" id="use-claude" role="tabpanel" aria-labelledby="tab-claude">
         <h3>Claude</h3>
         <p><a class="download" href="https://github.com/kevindavies/inclusive-job-ads/releases/latest/download/inclusive-job-ads.zip">Download the skill</a></p>
@@ -754,24 +781,6 @@ Always end with: Could someone who'd read it differently from you take a look? T
 
 Limits to be honest about: most of this research is from North America and Europe, and much of it measured appeal rather than who applied. This isn't legal advice; where wording carries legal risk, point to the local regulator (in the UK, ACAS and the EHRC; in the US, the EEOC). A welcoming ad for a badly defined job is still a bad ad.</pre><button type="button" class="copy" hidden>Copy the prompt</button></div>
       </section>
-      <section class="panel" id="use-ats" role="tabpanel" aria-labelledby="tab-ats">
-        <h3>Your applicant tracking system</h3>
-        <ol class="steps">
-          <li>Find where your ATS lets you guide its AI writer, often a “guidelines”, “tone” or “instructions” box.</li>
-          <li>Paste in the short prompt below. It’s under 1,000 characters, and it’s about writing ads, not reviewing them.</li>
-          <li>Generate an ad as usual.</li>
-        </ol>
-        <div class="code prompt-box"><pre class="prompt" data-prompt="short" tabindex="0" aria-label="The short prompt for an applicant tracking system">Write job ads that welcome everyone who could do the job.
-- State pay as a range, and say whether it's negotiable. Never write "competitive salary" without a figure.
-- Put flexibility near the top, and be specific about hours, location and how people really work.
-- Describe the job, not the person. Use behaviours, not traits: "you set your own goals and see them through", not "a driven self-starter".
-- List three to five essentials. Put the rest under "nice to have". Swap years of experience for what those years should prove.
-- Avoid wording that signals age ("young", "recent graduate"), gendered terms ("he/she", "salesman", "guys") and hype ("rockstar", "ninja", "work hard, play hard").
-- Don't add physical requirements the job doesn't need. Offer adjustments for applying and interviewing.
-- Show what working here is like, rather than claiming values.
-- Never invent pay, benefits or requirements. Leave a [placeholder] instead.</pre><button type="button" class="copy" hidden>Copy the prompt</button></div>
-        <p class="small">If your ATS has no such box, use one of the other tabs to write or review the ad, then paste it in.</p>
-      </section>
     </div>
   </section>
 
@@ -851,7 +860,7 @@ Limits to be honest about: most of this research is from North America and Europ
   var typed = document.querySelector('.lede-sub .typed');
   var caret = document.querySelector('.lede-sub .tcaret');
   if (!typed || !caret || !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var steps = [], t = 700;
+  var steps = [], t = 2600;
   function at(ms, fn) { t += ms; steps.push([t, fn]); }
   function set(text) { return function () { typed.textContent = text; }; }
   function backspace(word, ms) { for (var i = word.length - 1; i >= 2; i--) at(ms, set(word.slice(0, i))); at(ms, set('')); }
