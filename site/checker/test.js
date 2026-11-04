@@ -31,4 +31,18 @@ t('#5 experience floors in words are read', () => {
 t('long numeric floor still flagged', () => {
   assert.match(r('8+ years building systems')[2][1], /long floor/);
 });
+t('#6 a plain degree requirement gets a question', () => {
+  assert.match(r('Requirements\n- A degree in business or a related subject\n- Excel')[4][2], /Does the job need one/);
+  assert.strictEqual(r('Requirements\n- Excel\n\nNice to have\n- A degree')[4][2], '');
+});
+t('coffee on shift is not drinks culture', () => {
+  assert.doesNotMatch(r('Staff discount and free drinks on shift')[6][1], /drinks/);
+  assert.match(r('Friday drinks and a beer fridge')[6][1], /Friday drinks/);
+});
+t('an adjustments offer split across lines still counts', () => {
+  assert.strictEqual(r('£30k, negotiable.\nTell us what would\nhelp you at interview.')[3][0], 'ok');
+});
+t('"What we need" is a requirements heading', () => {
+  assert.match(r('What we need\n- A\n- B\n- C\n- D\n- E\n- F')[4][1], /6 must-haves/);
+});
 console.log(n + ' checker tests passed');
