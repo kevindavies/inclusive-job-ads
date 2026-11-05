@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YQPMlhd3OcPuWoeZZyotYhbKxPhKJrJw9g+VejebQFM=' 'sha256-aG32SZT5T2fmGKmU4p7piqgRu2ksOZPMAeDD5KVlhZA=' 'sha256-VcbscKBnr2Z1WBbeYykSwU+R8VTt92hvcy6Zlx8Ez5E=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YQPMlhd3OcPuWoeZZyotYhbKxPhKJrJw9g+VejebQFM=' 'sha256-aG32SZT5T2fmGKmU4p7piqgRu2ksOZPMAeDD5KVlhZA=' 'sha256-A8MV6Hmm7k2HNuR2Wf13Kh1IjZUYnFSn9d+o1jgUHBE=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Paste a job ad and check it against seven evidence-based guidelines. It runs in your browser, so your ad isn’t sent anywhere.">
@@ -541,6 +541,28 @@ footer { align-items: baseline; }
 .checker { gap: var(--line); }
 .chk-input { display: grid; gap: var(--half); }
 .chk-input label { font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
+.chk-input { position: relative; }
+/* The empty-box prompt: handwritten, with an arrow drawn in like the pencil edits. Left of the box on desktop, above it on phones. */
+.doodle { font-family: var(--font-hand); font-weight: 500; font-size: 1.625rem; line-height: 1.5rem; color: var(--link); pointer-events: none; }
+.doodle .say { display: block; animation: write 0.9s steps(22, end) 0.5s both; }
+.doodle svg { display: block; overflow: visible; }
+.doodle path { stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; }
+.doodle .stroke { animation: draw 0.8s cubic-bezier(.4,0,.3,1) 1.5s both; }
+.doodle .head { animation: draw 0.22s ease-out 2.3s both; }
+@keyframes draw { from { stroke-dashoffset: 1; opacity: 0; } 1% { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+.doodle .narrow { display: none; }
+@media (min-width: 861px) {
+  .doodle { position: absolute; top: 9rem; right: calc(100% + var(--gutter) * 0.5); width: 13.5rem; transform: rotate(-3deg); }
+  .doodle .say { padding-left: 0.5rem; }
+  .doodle .wide { width: 100%; margin-top: 0.25rem; }
+}
+@media (max-width: 860px) {
+  .doodle { display: flex; align-items: flex-start; gap: 0.25rem; padding-left: 0.5rem; margin-bottom: -0.5rem; }
+  .doodle .say { transform: rotate(-2deg); }
+  .doodle .wide { display: none; }
+  .doodle .narrow { display: block; width: 3.5rem; margin-top: 0.4rem; }
+}
+#chk-text::placeholder { color: #6a7178; opacity: 1; }
 /* The box: a transparent textarea over a backdrop that carries the highlights */
 .chk-field { position: relative; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; }
 .chk-field:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
@@ -626,53 +648,21 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   <div class="lede-block grid12">
   <h2 class="lede">Check a job ad</h2>
   <p class="lede-sub">Paste an ad, and it’s checked against each of the seven guidelines as you type. It runs in your browser, so your ad isn’t sent anywhere or saved.</p>
-  <p class="lede-sub"><strong>Note:</strong> <em>This version doesn’t use AI. It just matches words.</em><br>If you add it to your own AI assistant, it can apply the same guidelines <em>and</em> read what the words imply.</p>
+  <p class="lede-sub"><strong>Note:</strong> <em>This version doesn’t use AI. It just matches words.</em><br>If you add it to your own AI assistant, it can apply the same guidelines <em>and</em> read what the words imply, then make suggestions.</p>
   <p class="lede-links"><a href="../">The guidelines</a><span aria-hidden="true">•</span><a href="../#use">Use them with your AI tools</a></p>
   </div>
   <section class="sec grid12" id="check" aria-labelledby="h-check">
     <div class="sec-label">
       <h2 id="h-check">Your ad</h2>
-      <p class="sidenote">The examples are made up, each with different problems. Clear the box and paste your own.</p>
+      <p class="sidenote">Or load an example. They’re made up, each with different problems.</p>
       <p class="sidenote">It catches words. For what the words imply, ask a colleague, or <a href="../#use">use your AI tools</a>.</p>
     </div>
     <div class="sec-body checker">
       <div class="chk-input">
         <label for="chk-text" class="sr-only">Your job ad</label>
         <div class="input-actions" id="chk-actions" hidden><span class="ex-label">Examples:</span><span id="chk-examples"></span><button type="button" id="chk-clear">Clear</button><span id="chk-count"></span></div>
-        <div class="chk-field"><div class="chk-backdrop" aria-hidden="true"><div class="chk-hl" id="chk-hl"></div></div><textarea id="chk-text" rows="14" spellcheck="false">Customer Success Manager
-
-Salary: £32k to £38k depending on experience
-
-About us
-
-We're a fast-growing software company helping independent cafés manage bookings, stock and staff rotas. We're ambitious, and we're proud of our 4.8 rating on Trustpilot.
-
-Who we're looking for
-
-A confident, ambitious Customer Success Manager who will champion our customers and drive retention across a portfolio of 150 accounts. You'll be the decisive voice of the customer in product decisions.
-
-Requirements
-
-- 3+ years in customer success or account management
-- Experience with SaaS products
-- Experience with HubSpot and Zendesk
-- Excellent written and verbal communication
-- Strong analytical skills
-- Commercial awareness
-- Experience running onboarding and training sessions
-- Experience managing renewals and upsells
-- Confident presenting to senior stakeholders
-- Able to manage competing priorities
-- A degree in business or a related subject
-- Full UK driving licence
-
-The offer
-
-- An attractive salary of £35k to £42k
-- 25 days' holiday plus bank holidays
-- Pension
-- Flexible working
-- Team socials every month</textarea></div>
+        <div class="doodle" id="chk-doodle" aria-hidden="true"><span class="say">Paste your ad in here<br>to check it</span><svg class="arrow wide" viewBox="0 0 160 90" fill="none"><path class="stroke" pathLength="1" d="M34 4 C 24 40, 52 72, 90 66 C 114 62, 122 44, 108 39 C 93 34, 92 63, 152 62"/><path class="head" pathLength="1" d="M139 52 L153 62 L138 71"/></svg><svg class="arrow narrow" viewBox="0 0 64 60" fill="none"><path class="stroke" pathLength="1" d="M2 12 C 30 2, 54 16, 48 54"/><path class="head" pathLength="1" d="M39 44 L48 56 L57 45"/></svg></div>
+        <div class="chk-field"><div class="chk-backdrop" aria-hidden="true"><div class="chk-hl" id="chk-hl"></div></div><textarea id="chk-text" rows="14" spellcheck="false" placeholder="Paste the whole ad here, rockstars, ninjas and all.&#10;&#10;It never leaves your browser. We couldn’t read it if we tried."></textarea></div>
         <p class="chk-key" id="chk-key" hidden><span class="k-flag">Wavy line</span>: worth a look. <span class="k-hl">Shading</span>: check it, because it may be fine in context.</p>
         <noscript><p class="sidenote">The checker needs JavaScript. The guidelines above work without it.</p></noscript>
       </div>
@@ -913,12 +903,13 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     var names = ['State the pay', 'Say how flexible it is', 'Leave age out of it', 'Offer adjustments', 'Keep the must-haves short', 'Describe the job, not the person', 'Show, don’t claim'];
   var labels = { ok: 'Looks fine', look: 'Worth a look', read: 'Needs a person' };
   var hl = document.getElementById('chk-hl'), key = document.getElementById('chk-key');
-  var count = document.getElementById('chk-count');
+  var count = document.getElementById('chk-count'), doodle = document.getElementById('chk-doodle');
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function render() {
     var r = check(box.value);
     list.innerHTML = '';
     count.textContent = r.empty ? '' : r.words + ' words';
+    doodle.hidden = !r.empty;
     if (r.empty) {
       var e = document.createElement('li'); e.className = 'empty-row';
       e.innerHTML = '<span></span><p class="empty">Paste an ad above, and each guideline gets checked here.</p>';

@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YQPMlhd3OcPuWoeZZyotYhbKxPhKJrJw9g+VejebQFM=' 'sha256-aG32SZT5T2fmGKmU4p7piqgRu2ksOZPMAeDD5KVlhZA=' 'sha256-VcbscKBnr2Z1WBbeYykSwU+R8VTt92hvcy6Zlx8Ez5E=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YQPMlhd3OcPuWoeZZyotYhbKxPhKJrJw9g+VejebQFM=' 'sha256-aG32SZT5T2fmGKmU4p7piqgRu2ksOZPMAeDD5KVlhZA=' 'sha256-A8MV6Hmm7k2HNuR2Wf13Kh1IjZUYnFSn9d+o1jgUHBE=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Guidelines for writing and reviewing job ads that welcome everyone who could do the job, with tools for Claude, ChatGPT, Gemini and Copilot. Free and open source.">
@@ -540,6 +540,28 @@ footer { align-items: baseline; }
 .checker { gap: var(--line); }
 .chk-input { display: grid; gap: var(--half); }
 .chk-input label { font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
+.chk-input { position: relative; }
+/* The empty-box prompt: handwritten, with an arrow drawn in like the pencil edits. Left of the box on desktop, above it on phones. */
+.doodle { font-family: var(--font-hand); font-weight: 500; font-size: 1.625rem; line-height: 1.5rem; color: var(--link); pointer-events: none; }
+.doodle .say { display: block; animation: write 0.9s steps(22, end) 0.5s both; }
+.doodle svg { display: block; overflow: visible; }
+.doodle path { stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; }
+.doodle .stroke { animation: draw 0.8s cubic-bezier(.4,0,.3,1) 1.5s both; }
+.doodle .head { animation: draw 0.22s ease-out 2.3s both; }
+@keyframes draw { from { stroke-dashoffset: 1; opacity: 0; } 1% { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+.doodle .narrow { display: none; }
+@media (min-width: 861px) {
+  .doodle { position: absolute; top: 9rem; right: calc(100% + var(--gutter) * 0.5); width: 13.5rem; transform: rotate(-3deg); }
+  .doodle .say { padding-left: 0.5rem; }
+  .doodle .wide { width: 100%; margin-top: 0.25rem; }
+}
+@media (max-width: 860px) {
+  .doodle { display: flex; align-items: flex-start; gap: 0.25rem; padding-left: 0.5rem; margin-bottom: -0.5rem; }
+  .doodle .say { transform: rotate(-2deg); }
+  .doodle .wide { display: none; }
+  .doodle .narrow { display: block; width: 3.5rem; margin-top: 0.4rem; }
+}
+#chk-text::placeholder { color: #6a7178; opacity: 1; }
 /* The box: a transparent textarea over a backdrop that carries the highlights */
 .chk-field { position: relative; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; }
 .chk-field:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
@@ -1124,12 +1146,13 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     var names = ['State the pay', 'Say how flexible it is', 'Leave age out of it', 'Offer adjustments', 'Keep the must-haves short', 'Describe the job, not the person', 'Show, don’t claim'];
   var labels = { ok: 'Looks fine', look: 'Worth a look', read: 'Needs a person' };
   var hl = document.getElementById('chk-hl'), key = document.getElementById('chk-key');
-  var count = document.getElementById('chk-count');
+  var count = document.getElementById('chk-count'), doodle = document.getElementById('chk-doodle');
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function render() {
     var r = check(box.value);
     list.innerHTML = '';
     count.textContent = r.empty ? '' : r.words + ' words';
+    doodle.hidden = !r.empty;
     if (r.empty) {
       var e = document.createElement('li'); e.className = 'empty-row';
       e.innerHTML = '<span></span><p class="empty">Paste an ad above, and each guideline gets checked here.</p>';

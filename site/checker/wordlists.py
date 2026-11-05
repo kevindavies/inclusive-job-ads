@@ -42,8 +42,8 @@ eblob = json.dumps(ex, ensure_ascii=False)
 assert '</' not in eblob
 new, n = re.subn(r'(<script type="application/json" id="examples">).*?(</script>)', lambda m: m.group(1) + eblob + m.group(2), new, flags=re.S)
 assert n == 1, 'examples marker not found'
-import html as _h
-new, n = re.subn(r'(<textarea id="chk-text"[^>]*>).*?(</textarea>)', lambda m: m.group(1) + _h.escape(ex[0]["text"], quote=False) + m.group(2), new, flags=re.S)
+# The box starts empty: people come here with an ad to check.
+new, n = re.subn(r'(<textarea id="chk-text"[^>]*>).*?(</textarea>)', lambda m: m.group(1) + m.group(2), new, flags=re.S)
 assert n == 1
 page.write_text(new)
 print('wordlists written:', len(d.COMMUNAL), 'communal,', len(d.AGENTIC), 'agentic')
