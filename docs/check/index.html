@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YQPMlhd3OcPuWoeZZyotYhbKxPhKJrJw9g+VejebQFM=' 'sha256-aG32SZT5T2fmGKmU4p7piqgRu2ksOZPMAeDD5KVlhZA=' 'sha256-A8MV6Hmm7k2HNuR2Wf13Kh1IjZUYnFSn9d+o1jgUHBE=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YQPMlhd3OcPuWoeZZyotYhbKxPhKJrJw9g+VejebQFM=' 'sha256-aG32SZT5T2fmGKmU4p7piqgRu2ksOZPMAeDD5KVlhZA=' 'sha256-wKeaM+rYKVCc5LOGNdvZJkf+sbFlUxIKNxL8Md+4pf0=' 'sha256-lI/S4mokCJLeG6S6BjtUvBbJYybyF4CJmz7kx+Sve3Y=' https://static.cloudflareinsights.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Paste a job ad and check it against seven evidence-based guidelines. It runs in your browser, so your ad isn’t sent anywhere.">
@@ -562,6 +562,20 @@ footer { align-items: baseline; }
   .doodle .wide { display: none; }
   .doodle .narrow { display: block; width: 3.5rem; margin-top: 0.4rem; }
 }
+/* Once there's an ad in the box, a second note, lower down, points to the AI version. */
+.chk-out { position: relative; display: grid; gap: var(--line); }
+.doodle.nudge { margin: 0; pointer-events: auto; font-size: 1.5rem; line-height: 1.625rem; text-wrap: pretty; }
+.doodle[hidden] { display: none !important; }
+.doodle.nudge .say { animation-delay: 0.1s; animation-duration: 1.4s; animation-timing-function: steps(40, end); }
+.doodle.nudge a { color: inherit; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.18em; }
+.doodle.nudge a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+@media (min-width: 861px) {
+  .doodle.nudge { position: absolute; top: calc(var(--half) * 0.5); right: calc(100% + var(--gutter) * 0.5); width: 13.5rem; transform: rotate(-3deg); }
+}
+@media (max-width: 860px) {
+  .doodle.nudge { display: block; order: 2; padding-left: 0.5rem; }
+  .doodle.nudge .say { transform: rotate(-1.5deg); }
+}
 #chk-text::placeholder { color: #6a7178; opacity: 1; }
 /* The box: a transparent textarea over a backdrop that carries the highlights */
 .chk-field { position: relative; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; }
@@ -666,7 +680,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         <p class="chk-key" id="chk-key" hidden><span class="k-flag">Wavy line</span>: worth a look. <span class="k-hl">Shading</span>: check it, because it may be fine in context.</p>
         <noscript><p class="sidenote">The checker needs JavaScript. The guidelines above work without it.</p></noscript>
       </div>
-      <ol class="results" id="chk-results" aria-live="polite"></ol>
+      <div class="chk-out">
+        <p class="doodle nudge" id="chk-nudge" hidden><span class="say">Seriously, this works better as a skill for AI assistants. <a href="../#use">Here’s how to add it…</a></span></p>
+        <ol class="results" id="chk-results" aria-live="polite"></ol>
+      </div>
     </div>
   </section>
 
@@ -903,13 +920,14 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     var names = ['State the pay', 'Say how flexible it is', 'Leave age out of it', 'Offer adjustments', 'Keep the must-haves short', 'Describe the job, not the person', 'Show, don’t claim'];
   var labels = { ok: 'Looks fine', look: 'Worth a look', read: 'Needs a person' };
   var hl = document.getElementById('chk-hl'), key = document.getElementById('chk-key');
-  var count = document.getElementById('chk-count'), doodle = document.getElementById('chk-doodle');
+  var count = document.getElementById('chk-count'), doodle = document.getElementById('chk-doodle'), nudge = document.getElementById('chk-nudge');
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function render() {
     var r = check(box.value);
     list.innerHTML = '';
     count.textContent = r.empty ? '' : r.words + ' words';
     doodle.hidden = !r.empty;
+    if (r.empty) hideNudge();
     if (r.empty) {
       var e = document.createElement('li'); e.className = 'empty-row';
       e.innerHTML = '<span></span><p class="empty">Paste an ad above, and each guideline gets checked here.</p>';
@@ -941,6 +959,15 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
     key.hidden = !r.marks.length;
     sync();
   }
+  // The AI nudge: a second after people type or paste their own ad, or once they scroll down to read an example's analysis.
+  var nudgeTimer = null, watching = false, seen = false;
+  function showNudge() { clearTimeout(nudgeTimer); watching = false; if (box.value.trim()) nudge.hidden = false; }
+  function hideNudge() { clearTimeout(nudgeTimer); watching = false; nudge.hidden = true; }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { seen = es[0].isIntersecting; if (seen && watching) showNudge(); }, { rootMargin: '0px 0px -35% 0px' }).observe(list);
+  }
+  function soon() { if (nudge.hidden) { clearTimeout(nudgeTimer); nudgeTimer = setTimeout(showNudge, 1000); } }
+  function onScrollDown() { if (nudge.hidden) { watching = true; if (seen) showNudge(); if (!('IntersectionObserver' in window)) soon(); } }
   function sync() { hl.style.transform = 'translateY(' + (-box.scrollTop) + 'px)'; }
   box.addEventListener('scroll', sync);
   box.addEventListener('input', render);
@@ -950,10 +977,10 @@ if (typeof module !== 'undefined') module.exports = makeChecker;
   examples.forEach(function (x, i) {
     var b = document.createElement('button'); b.type = 'button'; b.textContent = x.label;
     b.setAttribute('aria-pressed', i === 0 && box.value === x.text ? 'true' : 'false');
-    b.addEventListener('click', function () { box.value = x.text; pick(b); render(); });
+    b.addEventListener('click', function () { box.value = x.text; pick(b); render(); onScrollDown(); });
     exWrap.appendChild(b);
   });
-  box.addEventListener('input', function () { pick(null); });
+  box.addEventListener('input', function () { pick(null); soon(); });
   clear.addEventListener('click', function () { box.value = ''; pick(null); render(); box.focus(); });
   document.getElementById('chk-actions').hidden = false;
   render();
