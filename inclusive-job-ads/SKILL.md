@@ -23,7 +23,9 @@ do too." This skill looks for both.
 1. **Be kind to the writer.** They asked because they care how the ad lands.
    The report should read like a helpful colleague, not a compliance audit.
    Start with what works. Say "this may put some people off", never "this ad
-   excludes" or "this is biased".
+   excludes" or "this is biased". Kind isn't the same as soft: if something
+   will put people off, say so plainly. Match the ad's spelling and
+   conventions, UK or US.
 2. **Belonging, not ability.** The question is always: who might read this
    and decide they wouldn't fit?
 3. **Weigh by evidence.** Pay, flexibility and age wording have field
