@@ -523,7 +523,7 @@ footer { border-top: 1px solid var(--rule); padding-top: calc(var(--line) - 1px)
 .panel { gap: var(--line); }
 footer { align-items: baseline; }
 
-/* Check an ad */
+/* Check a spec */
 .checker { gap: var(--line); }
 .chk-input { display: grid; gap: var(--half); }
 .chk-input label { font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; }
@@ -627,13 +627,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <main class="wrap">
   <header class="site-head">
     <div class="label"><h1>inclusive-job-ads</h1><span>Guidelines and AI skill</span><span>MIT licence</span><span><a class="repo-link" href="https://github.com/kevindavies/inclusive-job-ads">GitHub<b aria-hidden="true">&#8599;</b></a></span></div>
-    <nav class="site-nav" aria-label="Pages"><a href="/" data-nav="main">Guidelines</a><a href="/check/" data-nav="check">Check an ad</a></nav>
+    <nav class="site-nav" aria-label="Pages"><a href="/" data-nav="main">Guidelines</a><a href="/check/" data-nav="check">Check a spec</a></nav>
   </header>
 <!--MAIN-->
   <div class="lede-block grid12">
   <p class="lede">Guidelines for writing and reviewing job ads that welcome everyone who could do the job.</p>
   <p class="lede-sub">They also come as tools for AI assistants like Claude, ChatGPT, Gemini and Copilot, and for the AI built into applicant tracking systems. Then your AI gives feedback the way <span class="sr-only">a helpful</span><em class="typed" aria-hidden="true">a helpful</em><span class="tcaret" aria-hidden="true" hidden></span> colleague would.</p>
-  <p class="lede-links"><a href="#guidelines">Read the guidelines</a><span aria-hidden="true">•</span><a href="check/">Check an ad</a><span aria-hidden="true">•</span><a href="#use">Use them with your AI tools</a></p>
+  <p class="lede-links"><a href="#guidelines">Read the guidelines</a><span aria-hidden="true">•</span><a href="check/">Check a spec</a><span aria-hidden="true">•</span><a href="#use">Use them with your AI tools</a></p>
   </div>
 
   <section class="proof-row" aria-label="A job spec, kindly edited">
@@ -685,7 +685,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <!--/MAIN-->
 <!--CHECKHEAD-->
   <div class="lede-block grid12">
-  <h2 class="lede">Check a job ad</h2>
+  <h2 class="lede">Check a job spec</h2>
   <p class="lede-sub">Paste an ad, and it’s checked against each of the seven guidelines as you type. It runs in your browser, so your ad isn’t sent anywhere or saved.</p>
   <p class="lede-sub"><strong>Note:</strong> <em>This version doesn’t use AI. It just matches words.</em><br>If you add it to your own AI assistant, it can apply the same guidelines <em>and</em> read what the words imply, then make suggestions.</p>
   <p class="lede-links"><a href="../">The guidelines</a><span aria-hidden="true">•</span><a href="../#use">Use them with your AI tools</a></p>
@@ -702,7 +702,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <div class="chk-input">
         <label for="chk-text" class="sr-only">Your job ad</label>
         <div class="input-actions" id="chk-actions" hidden><span class="ex-label">Examples:</span><span id="chk-examples"></span><button type="button" id="chk-clear">Clear</button><span id="chk-count"></span></div>
-        <div class="doodle" id="chk-doodle" aria-hidden="true"><span class="say">Paste your ad in here<br>to check it</span><svg class="arrow wide" viewBox="0 0 160 90" fill="none"><path class="stroke" pathLength="1" d="M34 4 C 24 40, 52 72, 90 66 C 114 62, 122 44, 108 39 C 93 34, 92 63, 152 62"/><path class="head" pathLength="1" d="M139 52 L153 62 L138 71"/></svg><svg class="arrow narrow" viewBox="0 0 64 60" fill="none"><path class="stroke" pathLength="1" d="M2 12 C 30 2, 54 16, 48 54"/><path class="head" pathLength="1" d="M39 44 L48 56 L57 45"/></svg></div>
+        <div class="doodle" id="chk-doodle" aria-hidden="true"><span class="say">Paste your spec in here<br>to check it</span><svg class="arrow wide" viewBox="0 0 160 90" fill="none"><path class="stroke" pathLength="1" d="M34 4 C 24 40, 52 72, 90 66 C 114 62, 122 44, 108 39 C 93 34, 92 63, 152 62"/><path class="head" pathLength="1" d="M139 52 L153 62 L138 71"/></svg><svg class="arrow narrow" viewBox="0 0 64 60" fill="none"><path class="stroke" pathLength="1" d="M2 12 C 30 2, 54 16, 48 54"/><path class="head" pathLength="1" d="M39 44 L48 56 L57 45"/></svg></div>
         <div class="chk-field"><div class="chk-backdrop" aria-hidden="true"><div class="chk-hl" id="chk-hl"></div></div><textarea id="chk-text" rows="14" spellcheck="false" placeholder="Paste the whole ad here, rockstars, ninjas and all.&#10;&#10;It never leaves your browser. We couldn’t read it if we tried."></textarea></div>
         <p class="chk-key" id="chk-key" hidden><span class="k-flag">Wavy line</span>: worth a look. <span class="k-hl">Shading</span>: check it, because it may be fine in context.</p>
         <noscript><p class="sidenote">The checker needs JavaScript. The guidelines above work without it.</p></noscript>
@@ -715,11 +715,11 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <!--TEASER-->
   <section class="sec grid12" id="check" aria-labelledby="h-check">
     <div class="sec-label">
-      <h2 id="h-check">Check an ad</h2>
+      <h2 id="h-check">Check a spec</h2>
     </div>
     <div class="sec-body">
       <p class="band-text">Paste an ad and see how it does against each guideline, with the words that need a look marked up.</p>
-      <p><a class="download" href="check/">Check an ad</a></p>
+      <p><a class="download" href="check/">Check a spec</a></p>
       <p class="sidenote">It runs in your browser. Your ad isn’t sent anywhere or saved.</p>
     </div>
   </section>

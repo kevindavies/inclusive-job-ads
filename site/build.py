@@ -13,7 +13,7 @@ def region(s, drop):
 full=s
 s=region(full, ['CHECKHEAD', 'CHECK'])
 chk=region(full, ['MAIN', 'TEASER'])
-chk=chk.replace('<title>inclusive-job-ads</title>', '<title>Check a job ad</title>', 1)
+chk=chk.replace('<title>inclusive-job-ads</title>', '<title>Check a job spec</title>', 1)
 chk=chk.replace('<h1>inclusive-job-ads</h1>', '<h1><a href="../">inclusive-job-ads</a></h1>', 1)
 s=s.replace(' data-nav="main"', ' aria-current="page"').replace(' data-nav="check"', '')
 chk=chk.replace(' data-nav="check"', ' aria-current="page"').replace(' data-nav="main"', '')
@@ -54,10 +54,10 @@ def csp(html):
 out=csp(page(s, head))
 open(dst,'w').write(out)
 chead=(head.replace('content="Guidelines for writing and reviewing job ads that welcome everyone who could do the job, with tools for Claude, ChatGPT, Gemini and Copilot. Free and open source."','content="Paste a job ad and check it against seven evidence-based guidelines. It runs in your browser, so your ad isn’t sent anywhere."')
-  .replace('<meta property="og:title" content="inclusive-job-ads">','<meta property="og:title" content="Check a job ad">')
+  .replace('<meta property="og:title" content="inclusive-job-ads">','<meta property="og:title" content="Check a job spec">')
   .replace('content="Guidelines for writing and reviewing job ads that welcome everyone who could do the job."','content="Paste a job ad and check it against seven evidence-based guidelines."')
   .replace('https://inclusive-job-ads.beaks.co/">','https://inclusive-job-ads.beaks.co/check/">'))
-assert chead.count('check/')==1 and 'Check a job ad' in chead
+assert chead.count('check/')==1 and 'Check a job spec' in chead
 cdst=os.path.join(os.path.dirname(dst), 'check', 'index.html')
 os.makedirs(os.path.dirname(cdst), exist_ok=True)
 open(cdst,'w').write(csp(page(chk, chead)))
