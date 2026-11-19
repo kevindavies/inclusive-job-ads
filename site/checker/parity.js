@@ -24,6 +24,8 @@ const CASES = [
   '£12.50 per hour, 16 to 24 hours a week', 'Pay: £11.44 an hour plus tips', '£12-£13/hour', '£95 a day', '£12.21ph',
   "Salary £30k, negotiable. You'll manage a £50k marketing budget.", "Salary £30k. You'll look after a budget of £50k.",
   '£28,000. A learning budget of £1,000 a year',
+  'You will manage a portfolio worth £100,000.', 'Salary £45k. A portfolio valued at £2,000,000.',
+  'Pay: 75,000 CAD per year', 'EUR 60k to 70k', '£40,000 or 50,000 USD',
 ];
 for (const t of CASES) {
   const py = JSON.parse(cp.execFileSync('python3', [path.join(root, 'inclusive-job-ads/scripts/decode.py')], { input: t }));

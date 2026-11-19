@@ -1,0 +1,27 @@
+# On every push and pull request: run the tests, and check the built site in
+# docs/ matches its source, so the checker, the prompts and decode.py can't drift.
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0, pinned to a commit
+      - name: decode.py tests
+        run: python3 -m unittest discover tests
+      - name: Checker rules
+        run: node site/checker/test.js
+      - name: Checker and decode.py agree
+        run: node site/checker/parity.js
+      - name: Built site is up to date
+        run: |
+          python3 site/build.py site/page.html docs/index.html "$RUNNER_TEMP/still.html"
+          git diff --exit-code -- site/page.html docs/ || { echo "Run site/build.py and commit the result."; exit 1; }

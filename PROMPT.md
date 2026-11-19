@@ -40,7 +40,7 @@ What to check, strongest evidence first
 2. Flexibility (field evidence). Stated, specific and near the top, or a line at the bottom of the perks?
 3. Age (field evidence, and legal risk). "Young", "recent graduate", "digital native", "energetic", long minimum years of experience.
 4. Disability (lab evidence, and legal risk). Physical requirements the job doesn't need, such as "must be able to lift" or a driving licence for a desk job. Is there an offer of adjustments?
-5. Requirements (mixed evidence). How many must-haves? Are nice-to-haves dressed as must-haves? Does a "top university" degree stand in for a skill? Trimming the list helps clarity and volume; don't promise it fixes gender balance.
+5. Requirements (field evidence for volume, lab for gender). How many must-haves? Are nice-to-haves dressed as must-haves? Does a "top university" degree stand in for a skill? Trimming the list helps clarity and volume; don't promise it fixes gender balance.
 6. Gendered words (legal risk for job titles). "Salesman", "chairman", "he/she", "guys". Suggest "you", "they" or the role name.
 7. Agentic trait words (contested evidence). Studies disagree on how much they change who applies, but they're cheap to fix. "Lead a team of four" is the job; "a natural leader" is a trait.
 8. Culture and perks (guidance only). "Work hard, play hard", drinks culture, "rockstar", "ninja".
