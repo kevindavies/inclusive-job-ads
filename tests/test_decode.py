@@ -93,6 +93,26 @@ class Pay(unittest.TestCase):
     def test_negotiable(self):
         self.assertTrue(decode.analyse("£40k-£48k, negotiable")["pay"]["says_negotiable"])
 
+    def test_negotiable_about_something_else_does_not_count(self):
+        r = decode.analyse("The start date is negotiable. Salary: £40,000.")
+        self.assertFalse(r["pay"]["says_negotiable"])
+
+    def test_bare_negotiable_after_pay_counts(self):
+        self.assertTrue(decode.analyse("Salary: £40,000. Negotiable.")["pay"]["says_negotiable"])
+        self.assertTrue(decode.analyse("£15,600 to £18,000 a year. The top of the range is\nnegotiable.")["pay"]["says_negotiable"])
+
+    def test_money_worth_a_portfolio_is_not_pay(self):
+        r = decode.analyse("You will manage a portfolio worth £100,000.")
+        self.assertEqual(r["pay"]["salary_figures"], [])
+
+    def test_currency_codes_count_as_pay(self):
+        self.assertEqual(decode.analyse("Pay: 75,000 CAD per year")["pay"]["salary_figures"], ["75,000 CAD"])
+        self.assertEqual(decode.analyse("EUR 60k to 70k")["pay"]["salary_figures"], ["EUR 60k to 70k"])
+
+    def test_analysis_is_a_task_not_a_trait(self):
+        r = decode.analyse("Strong market analysis skills.")
+        self.assertEqual(r["script_adjusted"]["agentic"], 0)
+
     def test_negotiable_in_placeholder_does_not_count(self):
         r = decode.analyse("£30,000 [confirm: is it negotiable?]")
         self.assertFalse(r["pay"]["says_negotiable"])

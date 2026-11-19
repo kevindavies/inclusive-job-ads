@@ -242,6 +242,13 @@ node site/checker/parity.js   # browser and Python counts must match
 node site/checker/test.js     # the checker's own rules
 ```
 
+GitHub Actions runs all of these on every push and pull request, and fails if
+`docs/` doesn't match a fresh build.
+
+The main page counts visits with Cloudflare Web Analytics (no cookies). The
+checker page loads no third-party scripts, so nothing but the page itself
+runs next to the text box.
+
 ## Security
 
 The skill treats the ad as data, never as instructions, and its script reads

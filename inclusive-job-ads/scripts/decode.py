@@ -67,6 +67,7 @@ LIKELY_FIXED = [
     r"lead generation", r"\bleads\b", r"\bteam lead\b", r"\btech lead\b",
     r"(?:market|industry|sector)[- ]leading", r"leading (?:provider|supplier|brand)",
     r"active directory", r"\banalytics\b", r"\banalysts?\b", r"data analy\w*",
+    r"\banalys[ie]s\b",
     r"(?:business|product|team|company|key) objectives",
     r"(?:design|engineering|product) principles",
     r"trustpilot", r"foundation trust", r"\bnhs trust",
@@ -82,10 +83,15 @@ LIKELY_FIXED = [
 ]
 FIXED_RE = re.compile("|".join(LIKELY_FIXED), re.IGNORECASE)
 
+# Currency written as a code, not a symbol: "75,000 CAD", "EUR 60k".
+CODES = r"(?:GBP|USD|EUR|CAD|AUD|NZD|CHF)"
+NUM = r"\d[\d,]*(?:\.\d+)?\s?[kK]?"
 PAY_RE = re.compile(
     r"[£$€]\s?\d[\d,]*(?:\.\d+)?\s?[kK]?"
     r"(?:\s?(?:-|–|—|to)\s?[£$€]?\s?\d[\d,]*(?:\.\d+)?\s?[kK]?)?"
     r"|\b\d{2,3}\s?[kK]\s?(?:-|–|—|to)\s?\d{2,3}\s?[kK]\b"
+    r"|\b" + CODES + r"\s?" + NUM + r"(?:\s?(?:-|–|—|to)\s?" + NUM + r")?"
+    r"|\b" + NUM + r"(?:\s?(?:-|–|—|to)\s?" + NUM + r")?\s?" + CODES + r"\b"
 )
 PAY_WORDS = re.compile(
     r"competitive (?:salary|pay|package)|\bnegotiable\b|\bDOE\b|"
@@ -176,7 +182,7 @@ def salary_like(amount):
 
 def canonical(amount):
     """Compare '£35–45K' and '£35k - £45k' as the same figure."""
-    a = re.sub(r"\s|£|\$|€", "", amount.lower())
+    a = re.sub(r"\s|£|\$|€|" + CODES.lower(), "", amount.lower())
     return re.sub(r"to|–|—", "-", a)
 
 
@@ -185,8 +191,32 @@ RATE_AFTER = re.compile(
     r"\s*(?:(?:an?|per|/)\s*(?:hour|hr|day|shift|week)\b|(?:p/?h|ph)\b|hourly\b)", re.IGNORECASE)
 # Money that belongs to the job, not the person: "a £50k marketing budget", "revenue of £2m".
 NOT_PAY_WORDS = r"(?:budget|revenue|turnover|funding|portfolio|pipeline|spend|investment|grant)"
-NOT_PAY_BEFORE = re.compile(NOT_PAY_WORDS + r"s?(?:\s+of)?(?:\s+(?:over|up to|around|about))?\s*$", re.IGNORECASE)
+NOT_PAY_BEFORE = re.compile(NOT_PAY_WORDS + r"s?(?:\s+(?:of|worth|valued at|totall?ing))?(?:\s+(?:over|up to|around|about))?\s*$", re.IGNORECASE)
 NOT_PAY_AFTER = re.compile(r"\s*(?:[a-z]+\s+){0,2}" + NOT_PAY_WORDS + r"s?\b", re.IGNORECASE)
+
+
+# "Negotiable" only counts when it's about pay: "£30k, negotiable", or a bare
+# "Negotiable." straight after the pay. "The start date is negotiable" doesn't.
+NEG_CONTEXT = re.compile(
+    r"salar(?:y|ies)|\bpay\b|\bpackage\b|\brates?\b|\brange\b|remuneration|compensation|\bwages?\b"
+    r"|\bOTE\b|\bDOE\b|per annum|[£$€]|\d\s?k\b|\b" + CODES + r"\b", re.IGNORECASE)
+NEG_BARE = re.compile(r"^\W*(?:(?:and|but|all|fully|it['’]?s|this is)\s+)?negotiable\b", re.IGNORECASE)
+
+
+def sentences(text):
+    """Sentences across hard-wrapped lines; a blank line always ends one."""
+    out = []
+    for block in re.split(r"\n\s*\n", text):
+        out += [x for x in re.sub(r"([.!?])\s+", "\\1\0", " ".join(block.split())).split("\0") if x]
+    return out
+
+
+def says_negotiable(text):
+    # Ignore [placeholders], so a draft asking "is it negotiable?" doesn't count.
+    ss = sentences(re.sub(r"\[[^\]]*\]", "", text))
+    return any(re.search(r"\bnegotiable\b", x, re.I) and
+               (NEG_CONTEXT.search(x) or (i and NEG_BARE.search(x) and NEG_CONTEXT.search(ss[i - 1])))
+               for i, x in enumerate(ss))
 
 
 def not_pay(line, start, end):
@@ -226,8 +256,7 @@ def pay(lines):
         "mentions": mentions,
         "salary_figures": list(distinct.values()),
         "more_than_one_salary_figure": len(distinct) > 1,
-        # Ignore [placeholders], so a draft asking "is it negotiable?" doesn't count.
-        "says_negotiable": bool(re.search(r"\bnegotiable\b", re.sub(r"\[[^\]]*\]", "", text), re.I)),
+        "says_negotiable": bool(says_negotiable(text)),
         "no_salary_figure": not salaries,
     }
 

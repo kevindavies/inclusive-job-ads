@@ -33,6 +33,22 @@ function makeChecker(L) {
   // Same rules as decode.py: a rate after a small amount makes it pay ("£12.50 per hour"),
   // and money that belongs to the job ("a £50k budget") isn't pay.
   var RATE = new RegExp(L.rate, 'iy'), NOTPAY_B = new RegExp(L.notPayBefore, 'i'), NOTPAY_A = new RegExp(L.notPayAfter, 'iy');
+  var NEGCTX = new RegExp(L.negContext, 'i'), NEGBARE = new RegExp(L.negBare, 'i');
+  // Same as decode.py: sentences across hard-wrapped lines, a blank line always ends one.
+  function sentences(t) {
+    var out = [];
+    t.split(/\n\s*\n/).forEach(function (b) {
+      b.split(/\s+/).filter(Boolean).join(' ').replace(/([.!?])\s+/g, '$1\u0000').split('\u0000')
+        .forEach(function (x) { if (x) out.push(x); });
+    });
+    return out;
+  }
+  function saysNegotiable(t) {
+    var ss = sentences(t.replace(/\[[^\]]*\]/g, ''));
+    return ss.some(function (x, i) {
+      return /\bnegotiable\b/i.test(x) && (NEGCTX.test(x) || (i > 0 && NEGBARE.test(x) && NEGCTX.test(ss[i - 1])));
+    });
+  }
   function at(re, line, i) { re.lastIndex = i; return re.test(line); }
   function notPay(line, s, e) { return NOTPAY_B.test(line.slice(Math.max(0, s - 40), s)) || at(NOTPAY_A, line, e); }
 
@@ -54,23 +70,31 @@ function makeChecker(L) {
     if (/\d\s?[kK]\b/.test(a)) return true;
     return (a.match(/\d[\d,]*(?:\.\d+)?/g) || []).some(function (x) { return parseFloat(x.replace(/,/g, '')) >= 5000; });
   }
-  function canonical(a) { return a.toLowerCase().replace(/\s|£|\$|€/g, '').replace(/to|–|—/g, '-'); }
+  var CODES = new RegExp('\\s|£|\\$|€|' + L.codes.toLowerCase(), 'g');
+  function canonical(a) { return a.toLowerCase().replace(CODES, '').replace(/to|–|—/g, '-'); }
 
   // Reading checks: plain patterns, so each finding can point at the words.
   var R = {
     age: /\b(?:young|youthful|recent (?:graduate|grad)s?|new grads?|digital natives?|energetic|mature)\b/gi,
     years: /\b(?:\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s?\+?\s?(?:years?|yrs)\b/gi,
     ceiling: /\b(?:no more than|up to|maximum of|max\.?)\s+\d{1,2}\s+(?:years?|yrs)\b/gi,
-    gendered: /\b(?:salesm[ae]n|chairm[ae]n|foreman|manpower|craftsman|workman|he\/she|s\/he|he or she|his\/her|his or her|guys|he|him|his)\b/gi,
-    physical: /\b(?:must be able to lift|heavy lifting|physically fit|fit and active|on your feet(?: a lot| all day)?|able[- ]bodied|stand for long periods|(?:full (?:uk )?|clean )?driving licen[cs]e|driver['’]?s licen[cs]e|own (?:car|transport))\b/gi,
-    adjust: /\b(?:reasonable adjustments?|adjustments?|accommodations?|accessib\w*|access needs|what would help you|let us know (?:if|what) you need|tell us (?:if|what) you need)\b/i,
+    gendered: /\b(?:salesm[ae]n|chairm[ae]n|foreman|manpower|craftsman|workman|he\/she|s\/he|he or she|his\/her|his or her|guys|he|him|his|she|her|hers)\b/gi,
+    physical: /\b(?:must be able to lift|(?:lift|lifting|carry|carrying)\s+(?:up to\s+|over\s+)?\d+\s?(?:kg|kilos?|lbs?)|(?:lift|carry)(?:ing)? heavy(?: [a-z]+)?|heavy lifting|physically fit|fit and active|on your feet(?: a lot| all day)?|able[- ]bodied|stand for long periods|(?:full (?:uk )?|clean )?driving licen[cs]e|driver['’]?s licen[cs]e|own (?:car|transport))\b/gi,
+    adjust: /\b(?:reasonable adjustments?|adjustments?|accommodations?|accessib\w*|access needs|what would help you|let us know (?:if|what) you need|tell us (?:if|what) you need)\b/gi,
+    // "salary adjustments" and "price adjustments" aren't an offer to applicants.
+    notAdjust: /\b(?:salary|salaries|pay|price|pricing|rates?|cost|inflation|stock|budget|tax|wage|annual)\s+$/i,
+    // "This is not a remote role" isn't an offer of flexibility.
+    notFlex: /\b(?:not|no|non|isn['’]t|aren['’]t)\b[\s-]+(?:(?:an?|the|fully|a fully)\s+)?$/i,
+    // "founded 10 years ago" is about the company, not the candidate.
+    notYearsAfter: /^\s+(?:ago|old)\b/i,
+    notYearsBefore: /\b(?:founded|established|trading|in business|history|anniversary|been around)\b/i,
     flex: /\b(?:flexib\w*|part[- ]time|hybrid|remote(?:ly)?|compressed hours|job[- ]shar\w*|school (?:run|pick-?ups?)|core hours|work(?:ing)? from (?:home|anywhere)|four[- ]day|4[- ]day|\d days? (?:a|per) week|term[- ]time|(?:nine|9)[- ]day fortnight|flexi[- ]?time|school hours|annuali[sz]ed hours)\b/gi,
     // Flexibility asked of the candidate, not offered: \"you must have the flexibility to work evenings\".
     flexDemand: /\b(?:must|need|needs|required|requires|willing|able|expected|prepared)\b[^.!?]*$/i,
     hype: /\b(?:rock ?stars?|ninjas?|gurus?|unicorns?|superstars?|wizards?|work hard,? play hard|beer fridge|beers?|(?:friday|after[- ]work|team) drinks|drinks (?:culture|trolley)|ping[- ]pong|hit the ground running|crush(?:ing)? (?:it|targets)|smash(?:ing)? (?:it|targets))\b/gi,
     proxy: /\b(?:top (?:university|universities|tier university)|russell group|ivy league|oxbridge|first[- ]class degree|2:1)\b/gi,
     claim: /\b(?:we value diversity|equal opportunit\w*|diverse and inclusive|committed to diversity)\b/i,
-    reqHead: /^\s*(?:#+\s*)?(?:requirements|what matters most|essential\w*|must[- ]haves?|what you(?:['’]ll)? need|you(?:['’]ll)? (?:have|need)|about you|skills and experience|what we(?:['’]re| are) looking for|what we need|who you are|experience)\b/i,
+    reqHead: /^\s*(?:#+\s*)?(?:[*_]{1,2})?(?:requirements|what matters most|essential\w*|must[- ]haves?|what you(?:['’]ll)? need|you(?:['’]ll)? (?:have|need)|about you|skills and experience|what we(?:['’]re| are) looking for|what we need|who you are|experience)(?![a-z])/i,
     niceHead: /\b(?:nice to have|nice-to-have|desirable|bonus|would be great|great if you)\b/i,
     bullet: /^\s*(?:[-*•]|\d+[.)])\s+/
   };
@@ -101,7 +125,7 @@ function makeChecker(L) {
       if (/competitive (?:salary|pay|package)/i.test(l)) competitive = true;
     });
     var f = Object.keys(figs).map(function (k) { return figs[k]; });
-    var negotiable = /\bnegotiable\b/i.test(lines.join('\n').replace(/\[[^\]]*\]/g, ''));
+    var negotiable = saysNegotiable(lines.join('\n'));
     if (!f.length) res.push(['look', competitive ? 'Says “competitive salary” but gives no figure.' : 'No salary figure.']);
     else if (f.length > 1) res.push(['look', 'Gives ' + f.length + ' different figures: ' + f.join(' and ') + '. Pick one range.']);
     else if (!negotiable) res.push(['look', 'Gives ' + f[0] + ', but doesn’t say whether it’s negotiable.']);
@@ -110,6 +134,7 @@ function makeChecker(L) {
     // 2 Flexibility
     var firstFlex = -1, flexWords = [], demands = [];
     lines.forEach(function (l, n) { all(R.flex, l).forEach(function (h) {
+      if (R.notFlex.test(l.slice(Math.max(0, h[0] - 25), h[0]))) return;
       if (/^flexib/i.test(h[2]) && R.flexDemand.test(l.slice(0, h[0]))) {
         demands.push(l.slice(h[0]).split(/[.!?]/)[0].trim()); mark(n, h[0], h[1], 2, 'demand'); return;
       }
@@ -128,6 +153,7 @@ function makeChecker(L) {
     var age = uniq(scan(R.age, 3, 'age')), ceil = uniq(scan(R.ceiling, 3, 'age'));
     var longYrs = [], shortYrs = [];
     lines.forEach(function (l, n) { all(R.years, l).forEach(function (h) {
+      if (R.notYearsAfter.test(l.slice(h[1])) || R.notYearsBefore.test(l.slice(0, h[0]).split(/[.!?]\s/).pop())) return;
       var long = yearsOf(h[2]) >= 7;
       (long ? longYrs : shortYrs).push(h[2]); mark(n, h[0], h[1], long ? 3 : 5, long ? 'age' : 'years');
     }); });
@@ -141,7 +167,7 @@ function makeChecker(L) {
     // 4 Adjustments
     var phys = uniq(scan(R.physical, 4, 'physical'));
     var flat = lines.join(' '); // so a phrase split across a line break still matches
-    var adj = R.adjust.test(flat);
+    var adj = all(R.adjust, flat).some(function (h) { return !/^adjust/i.test(h[2]) || !R.notAdjust.test(flat.slice(Math.max(0, h[0] - 20), h[0])); });
     var p4 = [];
     if (phys.length) p4.push('Asks for ' + q(phys) + '. Is it needed for the job?');
     if (!adj) p4.push('No offer of adjustments for applying or interviewing.');
